@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+<title>MN Manager 2026 · Membranous Nephropathy Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,'Segoe UI',Roboto,'Helvetica Neue',sans-serif}
+body{background:#f0f4f9;padding:20px;min-height:100vh;display:flex;justify-content:center;align-items:flex-start}
+.app-container{max-width:100%;width:100%;background:white;border-radius:36px;box-shadow:0 20px 40px -12px rgba(0,20,40,0.25);padding:28px 30px 40px}
+h1{font-size:28px;font-weight:600;color:#0b2a4a;display:flex;align-items:center;gap:10px;border-bottom:2px solid #e6edf5;padding-bottom:18px;margin-bottom:24px;flex-wrap:wrap}
+h1 i{color:#2a7de1;font-size:26px}
+.badge-guideline{background:#d4e2fc;color:#1a4c8c;font-size:14px;font-weight:500;padding:5px 16px;border-radius:40px;margin-left:12px;white-space:nowrap}
+.card{background:#fff;border-radius:24px;padding:24px 26px 28px;box-shadow:0 8px 18px rgba(0,0,0,0.02),0 0 0 1px #ebf0f8;height:fit-content;margin-bottom:24px}
+.card-title{font-size:18px;font-weight:600;color:#1f3a5f;display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.card-title i{color:#2a7de1;width:24px;font-size:19px}
+.top-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:24px;margin-bottom:24px}
+@media(max-width:1200px){.top-grid{grid-template-columns:1fr}}
+.input-group{display:flex;flex-direction:column;margin-bottom:16px}
+.input-group label{font-size:14px;font-weight:500;color:#2a405c;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
+.input-group input,.input-group select{padding:11px 16px;border:1px solid #d9e1ec;border-radius:16px;font-size:15px;background:white;transition:.15s;width:100%}
+.input-group input:focus,.input-group select:focus{border-color:#2a7de1;outline:none;box-shadow:0 0 0 3px rgba(42,125,225,0.12)}
+.input-row{display:flex;gap:14px;flex-wrap:wrap}
+.input-row .input-group{flex:1;min-width:100px}
+.unit-toggle{display:flex;gap:8px;background:#eef4fa;border-radius:40px;padding:5px;margin-bottom:18px;width:fit-content;flex-wrap:wrap}
+.unit-toggle button{background:transparent;border:none;padding:8px 20px;border-radius:30px;font-weight:500;font-size:14px;color:#3e5a7a;cursor:pointer;white-space:nowrap}
+.unit-toggle button.active{background:white;color:#0b2a4a;box-shadow:0 2px 6px rgba(0,0,0,0.04)}
+.trend-badge{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:500;padding:4px 14px 4px 10px;border-radius:40px;background:#eef2f6;color:#3f5a78}
+.trend-warn{background:#fee9e7;color:#b34033}
+.trend-good{background:#e1f3e8;color:#1d7a4b}
+.trend-stable{background:#eef2f6;color:#3f5a78}
+.risk-box{background:#f8faff;border-radius:18px;padding:18px 20px;margin:14px 0;border-left:6px solid #2a7de1}
+.risk-label{font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.4px;color:#3f5c7e}
+.risk-value{font-size:28px;font-weight:700;margin:6px 0 3px}
+.risk-value.low{color:#1f8b4c}.risk-value.moderate{color:#b57c1c}.risk-value.high{color:#b34033}
+.rec-list{list-style:none;margin-top:12px}
+.rec-list li{padding:6px 0 6px 28px;position:relative;font-size:15px;border-bottom:1px solid #edf2f8}
+.rec-list li:last-child{border-bottom:none}
+.rec-list li i{position:absolute;left:0;top:7px;color:#2a7de1;width:18px}
+.biopsy-result{background:#f2f6fe;border-radius:16px;padding:14px 18px;font-size:15px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 10px}
+.pill{background:#e2eaf5;padding:4px 16px;border-radius:40px;font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:7px}
+.footer-note{margin-top:28px;font-size:14px;color:#56759b;border-top:1px solid #e3eaf3;padding-top:22px;text-align:center}
+.flex-space{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.mt-2{margin-top:14px}
+.trend-table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0 14px}
+.trend-table th{background:#eef4fa;padding:8px 10px;text-align:left;font-weight:600;color:#1f3a5f}
+.trend-table td{padding:8px 10px;border-bottom:1px solid #eef3f8}
+.add-row-btn{background:#eef4fa;border:1px dashed #b0c8e0;border-radius:40px;padding:7px 18px;font-size:14px;color:#1f4f8a;cursor:pointer;margin-left:auto}
+.delete-row-btn{background:transparent;border:none;color:#b34033;cursor:pointer;font-size:15px;padding:0 5px}
+.chart-section{margin-bottom:24px}
+.chart-card{background:#fff;border-radius:24px;padding:24px 26px 28px;box-shadow:0 8px 18px rgba(0,0,0,0.02),0 0 0 1px #ebf0f8}
+.dual-chart-wrapper{background:#fafcff;border-radius:20px;padding:24px 20px 16px;margin-top:14px;border:1px solid #e6edf5;width:100%}
+.chart-canvas-container{position:relative;width:100%;height:520px}
+canvas{display:block;width:100%;height:100%}
+.chart-legend-dual{display:flex;gap:28px;justify-content:center;font-size:13px;color:#2a405c;margin-top:10px;flex-wrap:wrap}
+.chart-legend-dual span{display:flex;align-items:center;gap:7px}
+.legend-dot{width:16px;height:16px;border-radius:4px;display:inline-block}
+.legend-dot.blue{background:#2a7de1}.legend-dot.orange{background:#d97747}.legend-dot.green{background:#2e7d32}
+.trend-summary-box{background:#f5f9ff;border-radius:14px;padding:12px 16px;font-size:14px;margin-top:8px;display:flex;align-items:center;gap:10px}
+.btn-primary{background:#1f3a5f;border:none;color:white;padding:11px 26px;border-radius:40px;font-weight:600;font-size:15px;cursor:pointer}
+.btn-secondary{background:#eef4fa;border:none;color:#1f3a5f;padding:9px 20px;border-radius:40px;font-weight:500;font-size:14px;cursor:pointer}
+.btn-print{background:#1f8b4c;border:none;color:white;padding:9px 20px;border-radius:40px;font-weight:500;font-size:14px;cursor:pointer}
+.step-box{background:#fff;border-radius:16px;padding:18px 20px;margin:14px 0;border:2px solid #d9e1ec;position:relative}
+.step-box.step-1{border-color:#2a7de1;background:#f8faff}
+.step-box.step-2{border-color:#d97747;background:#fffaf7}
+.step-box.step-3{border-color:#7c3aed;background:#faf5ff}
+.step-box.step-4{border-color:#1f8b4c;background:#f0fff4}
+.step-number{position:absolute;top:-12px;left:20px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:white}
+.step-1 .step-number{background:#2a7de1}.step-2 .step-number{background:#d97747}.step-3 .step-number{background:#7c3aed}.step-4 .step-number{background:#1f8b4c}
+.dosing-table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0;background:white;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.dosing-table th{background:#1f3a5f;color:white;padding:12px 14px;text-align:left;font-weight:600;font-size:14px}
+.dosing-table td{padding:12px 14px;border-bottom:1px solid #e6edf5;font-size:14px}
+.dosing-table tr:nth-child(even){background:#f8faff}
+.success-badge{display:inline-block;background:#d4edda;color:#0e5e32;padding:5px 14px;border-radius:20px;font-size:14px;font-weight:700}
+.success-badge.moderate-success{background:#fff3cd;color:#856404}
+.success-badge.limited-success{background:#f8d7da;color:#721c24}
+.warning-box{background:#fff5f5;border:2px solid #e53e3e;border-radius:16px;padding:16px 20px;margin:14px 0}
+.warning-box i{color:#c53030;font-size:18px}
+.warning-box strong{color:#9b2c2c;font-size:15px}
+.info-box{background:#f0fff4;border:2px solid #38a169;border-radius:16px;padding:16px 20px;margin:14px 0}
+.info-box i{color:#2f855a;font-size:18px}
+.section-title{font-size:16px;font-weight:700;color:#1a365d;margin:16px 0 10px;padding-bottom:6px;border-bottom:2px solid #e2e8f0}
+.antigen-table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+.antigen-table th{background:#1f3a5f;color:white;padding:10px 12px;text-align:left;font-size:13px}
+.antigen-table td{padding:10px 12px;border-bottom:1px solid #e6edf5;font-size:13px;vertical-align:top}
+.antigen-table tr:nth-child(even){background:#f8faff}
+.badge-antigen{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.badge-pla2r{background:#d4e2fc;color:#1a4c8c}
+.badge-thsd7a{background:#fff3cd;color:#856404}
+.badge-nell1{background:#e1f3e8;color:#1d7a4b}
+.badge-ext{background:#f8d7da;color:#721c24}
+.badge-ndnf{background:#fce4ec;color:#ad1457}
+.badge-ncam1{background:#e8eaf6;color:#283593}
+.badge-fat1{background:#fff8e1;color:#f57f17}
+.fig2-wrap{background:linear-gradient(135deg,#f8faff,#f0f4ff);border-radius:20px;padding:24px;margin:16px 0;border:2px solid #d4e2fc}
+.fig2-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:800px){.fig2-grid{grid-template-columns:1fr}}
+.fig2-panel{background:white;border-radius:16px;padding:18px;border:1px solid #d8e6f5}
+.fig2-panel h5{font-size:13px;font-weight:700;color:#1a4c8c;margin-bottom:12px;text-align:center;padding-bottom:8px;border-bottom:1px dashed #d8e6f5}
+.fig2-row{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:12px;padding:6px 10px;border-radius:10px}
+.fig2-row.primary{background:#e8f0fe}
+.fig2-row.secondary{background:#fff3cd}
+.fig2-row.antigen{background:#f0fff4}
+.fig2-tag{font-weight:700;font-size:11px;padding:3px 8px;border-radius:8px;white-space:nowrap}
+.fig2-tag.pla2r{background:#d4e2fc;color:#1a4c8c}
+.fig2-tag.thsd7a{background:#fff3cd;color:#856404}
+.fig2-tag.nell1{background:#e1f3e8;color:#1d7a4b}
+.fig2-tag.ext{background:#f8d7da;color:#721c24}
+.fig2-tag.ndnf{background:#fce4ec;color:#ad1457}
+.fig2-tag.ncam1{background:#e8eaf6;color:#283593}
+.fig2-tag.fat1{background:#fff8e1;color:#f57f17}
+.fig2-tag.other{background:#e9ecef;color:#495057}
+.fig2-detail{font-size:11px;color:#4a5568;margin-left:auto;font-weight:500}
+.kdigo-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0;background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.kdigo-table th{background:#1f3a5f;color:white;padding:12px 14px;text-align:left;font-size:13px;font-weight:600}
+.kdigo-table td{padding:12px 14px;border-bottom:1px solid #e6edf5;font-size:13px;vertical-align:top}
+.kdigo-table tr:nth-child(even){background:#f8faff}
+.risk-pill{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.risk-pill.low{background:#d4edda;color:#0e5e32}
+.risk-pill.mod{background:#fff3cd;color:#856404}
+.risk-pill.high{background:#f8d7da;color:#721c24}
+.risk-pill.vhigh{background:#e53e3e;color:white}
+.gantt-wrap{background:#fafcff;border-radius:20px;padding:24px;margin:16px 0;border:1px solid #e6edf5;overflow-x:auto}
+.gantt-header{display:flex;margin-left:180px;margin-bottom:6px;min-width:820px}
+.gantt-header-cell{flex:1;text-align:center;font-size:12px;font-weight:700;color:#1a4c8c;padding:8px 0;background:#eef4fa;border-right:1px solid #d8e6f5}
+.gantt-header-cell:first-child{border-top-left-radius:8px}
+.gantt-header-cell:last-child{border-top-right-radius:8px;border-right:none}
+.gantt-row{display:flex;align-items:center;margin-bottom:6px;min-width:820px}
+.gantt-row-label{width:180px;font-size:12px;font-weight:600;color:#1a4c8c;padding-right:12px;text-align:right;flex-shrink:0}
+.gantt-row-track{flex:1;display:flex;height:34px;background:#f5f8fc;border-radius:8px;overflow:hidden;border:1px solid #e0e8f2}
+.gantt-cell{flex:1;border-right:1px dashed #d8e6f5;position:relative;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:white}
+.gantt-cell:last-child{border-right:none}
+.gantt-cell.active-mp{background:linear-gradient(135deg,#d97747,#b34033)}
+.gantt-cell.active-cyc{background:linear-gradient(135deg,#7c3aed,#5b21b6)}
+.gantt-cell.active-pre{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.gantt-cell.inactive{background:#f5f8fc}
+.gantt-legend{display:flex;gap:20px;justify-content:center;margin-top:16px;font-size:11px;color:#4a5568;flex-wrap:wrap}
+.gantt-legend span{display:flex;align-items:center;gap:6px}
+.gantt-dot{width:16px;height:16px;border-radius:4px}
+.gantt-dot.mp{background:linear-gradient(135deg,#d97747,#b34033)}
+.gantt-dot.cyc{background:linear-gradient(135deg,#7c3aed,#5b21b6)}
+.gantt-dot.pre{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.calc-wrap{background:linear-gradient(135deg,#f0fff4,#e8f5e9);border-radius:20px;padding:24px;margin:16px 0;border:2px solid #38a169}
+.calc-title{font-size:15px;font-weight:700;color:#0e5e32;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px}
+@media(max-width:700px){.calc-grid{grid-template-columns:1fr 1fr}}
+.calc-input{background:white;border-radius:12px;padding:12px 14px;border:1px solid #c8e6c9}
+.calc-input label{display:block;font-size:11px;font-weight:700;color:#2f855a;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.calc-input input,.calc-input select{width:100%;border:none;font-size:16px;font-weight:700;color:#0e5e32;background:transparent;outline:none}
+.calc-result{background:white;border-radius:16px;padding:18px;border:2px solid #38a169;margin-top:14px}
+.calc-result h5{font-size:14px;font-weight:700;color:#0e5e32;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.calc-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #e8f5e9;font-size:13px}
+.calc-row:last-child{border-bottom:none}
+.calc-row .label{color:#2f855a;font-weight:500}
+.calc-row .value{color:#0e5e32;font-weight:700;font-size:14px}
+.calc-warn{background:#fff5f5;border:1px solid #f0c0c0;border-radius:10px;padding:10px 14px;margin-top:12px;font-size:12px;color:#9b2c2c;line-height:1.6}
+.calc-ok{background:#f0fff4;border:1px solid #a0d8b0;border-radius:10px;padding:10px 14px;margin-top:12px;font-size:12px;color:#0e5e32;line-height:1.6}
+.calc-info{background:#eef4fa;border-radius:10px;padding:10px 14px;margin-top:12px;font-size:11px;color:#3f5c7e;line-height:1.6}
+.rtx-algo{background:#fafcff;border-radius:20px;padding:24px;margin:16px 0;border:2px solid #2a7de1}
+.rtx-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:1000px){.rtx-steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.rtx-steps{grid-template-columns:1fr}}
+.rtx-step{background:white;border-radius:14px;padding:16px;border:2px solid #d8e6f5}
+.rtx-step-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#2a7de1;color:white;font-weight:700;font-size:13px;margin-bottom:10px}
+.rtx-step h6{font-size:13px;font-weight:700;color:#1a4c8c;margin-bottom:8px}
+.rtx-step p{font-size:12px;color:#4a5568;line-height:1.6}
+.rtx-step .action{display:block;background:#eef4fa;border-radius:8px;padding:8px 10px;font-size:11px;font-weight:600;color:#1a4c8c;margin-top:8px}
+.rtx-info-wrap{background:linear-gradient(135deg,#eef4ff,#e0e8ff);border-radius:20px;padding:24px;margin:16px 0;border:2px solid #2a7de1}
+.rtx-info-title{font-size:15px;font-weight:700;color:#1a4c8c;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.rtx-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+@media(max-width:800px){.rtx-info-grid{grid-template-columns:1fr}}
+.rtx-info-panel{background:white;border-radius:14px;padding:16px;border:1px solid #d8e6f5}
+.rtx-info-panel h5{font-size:13px;font-weight:700;color:#1a4c8c;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.rtx-info-panel table{width:100%;border-collapse:collapse;font-size:12px}
+.rtx-info-panel table th{background:#eef4fa;padding:8px 10px;text-align:left;font-weight:600;color:#1a4c8c;font-size:11px}
+.rtx-info-panel table td{padding:8px 10px;border-bottom:1px solid #eef3f8;font-size:12px}
+.rtx-info-panel ul{list-style:none;margin:0;padding:0}
+.rtx-info-panel li{font-size:12px;color:#4a5568;padding:5px 0 5px 16px;position:relative;line-height:1.5}
+.rtx-info-panel li::before{content:'▸';position:absolute;left:0;color:#2a7de1}
+.anticoag-wrap{background:linear-gradient(135deg,#fff5f5,#ffe8e8);border-radius:20px;padding:24px;margin:16px 0;border:2px solid #e53e3e}
+.anticoag-title{font-size:15px;font-weight:700;color:#9b2c2c;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.anticoag-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+@media(max-width:800px){.anticoag-grid{grid-template-columns:1fr}}
+.anticoag-panel{background:white;border-radius:14px;padding:16px;border:1px solid #f0c0c0}
+.anticoag-panel h5{font-size:13px;font-weight:700;color:#9b2c2c;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.anticoag-panel ul{list-style:none;margin:0;padding:0}
+.anticoag-panel li{font-size:12px;color:#4a5568;padding:5px 0 5px 16px;position:relative;line-height:1.5}
+.anticoag-panel li::before{content:'▸';position:absolute;left:0;color:#e53e3e}
+.anticoag-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}
+.anticoag-table th{background:#9b2c2c;color:white;padding:10px 12px;text-align:left;font-size:12px}
+.anticoag-table td{padding:10px 12px;border-bottom:1px solid #f0c0c0;font-size:12px}
+.anticoag-table tr:nth-child(even){background:#fff5f5}
+.explain-box{background:linear-gradient(135deg,#eef4ff,#f0f9ff);border:2px solid #2a7de1;border-radius:18px;padding:18px 20px;margin-top:16px}
+.explain-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.explain-grid{grid-template-columns:1fr}}
+.explain-item{background:white;border-radius:14px;padding:14px 16px;border:1px solid #d8e6f5}
+.explain-item h5{font-size:14px;font-weight:700;color:#1a4c8c;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.explain-item ul{list-style:none;margin:0;padding:0}
+.explain-item li{font-size:13px;color:#2a405c;padding:4px 0 4px 18px;position:relative;line-height:1.5}
+.explain-item li::before{content:'▸';position:absolute;left:0;color:#2a7de1}
+@media print{
+body{background:white;padding:0}
+.app-container{box-shadow:none;border-radius:0}
+.btn-primary,.btn-secondary,.btn-print,.add-row-btn,.delete-row-btn,.unit-toggle,#refreshBtn,#addTrendBtn,#loadExampleBtn,#clearTrendsBtn{display:none!important}
+.top-grid{display:block}
+.card{break-inside:avoid;margin-bottom:18px}
+canvas{max-height:420px}
+}
+</style>
+</head>
+<body>
+<div class="app-container" id="printableArea">
+
+<h1>
+<i class="fas fa-kidney"></i> MN · Membranous Nephropathy Manager
+<span class="badge-guideline"><i class="far fa-calendar-alt"></i> 2025–2026 KDIGO / Zand-Fervenza-Sethi</span>
+<span style="font-size:15px;font-weight:400;margin-left:auto;color:#3f6a8a"><i class="fas fa-dna"></i> Antigen-based · Dosing · Anticoagulation</span>
+<button class="btn-print" onclick="window.print()" style="margin-left:14px"><i class="fas fa-print"></i> Print protocol</button>
+</h1>
+
+<!-- ============================================================ -->
+<!-- FIGURE 1 — ANTIGEN DISCOVERY TIMELINE (light, inline-styled) -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-title"><i class="fas fa-timeline"></i> Figure 1 · The antigen discovery timeline (2009 → 2025)</div>
+<div style="background:#f8fafc;border-radius:20px;padding:28px 24px;border:1px solid #e2e8f0">
+<div style="text-align:center;font-size:20px;font-weight:800;color:#1e293b;margin-bottom:6px">A revolution in membranous nephropathy</div>
+<div style="text-align:center;font-size:12px;color:#64748b;margin-bottom:28px">From a single antigen to an antigen-based classification system — Sethi · Fervenza · Beck · Salant · Ronco</div>
+
+<div style="overflow-x:auto;padding-bottom:8px">
+<div style="display:flex;gap:0;min-width:920px;align-items:stretch">
+
+<!-- ERA 1: 2009 -->
+<div style="flex:1;padding:0 10px;position:relative">
+<div style="height:6px;background:#e2e8f0;border-radius:3px;margin-top:24px;position:relative">
+<div style="position:absolute;left:0;right:0;top:0;bottom:0;background:linear-gradient(90deg,#38bdf8 0%,#818cf8 25%,#a78bfa 50%,#ec4899 75%,#f472b6 100%);border-radius:3px"></div>
+</div>
+<div style="margin-top:20px;text-align:center">
+<div style="display:inline-block;font-size:14px;font-weight:800;color:#0369a1;padding:5px 14px;border-radius:20px;background:#e0f2fe;border:2px solid #38bdf8;margin-bottom:12px">2009</div>
+<div style="margin:8px auto 12px;width:16px;height:16px;border-radius:50%;background:white;border:4px solid #38bdf8;box-shadow:0 0 0 4px rgba(56,189,248,0.2)"></div>
+<div style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 14px;border-radius:14px;background:linear-gradient(135deg,#0ea5e9,#0369a1);letter-spacing:.5px;margin-bottom:14px">PLA2R</div>
+<div style="font-size:11px;color:#475569;line-height:1.5;max-width:170px;margin:0 auto">First podocyte autoantigen. ~70–80% of primary MN.</div>
+</div>
+</div>
+
+<!-- ERA 2: 2014 -->
+<div style="flex:1;padding:0 10px;position:relative">
+<div style="height:6px;background:transparent;border-radius:3px;margin-top:24px"></div>
+<div style="margin-top:20px;text-align:center">
+<div style="display:inline-block;font-size:14px;font-weight:800;color:#4338ca;padding:5px 14px;border-radius:20px;background:#e0e7ff;border:2px solid #818cf8;margin-bottom:12px">2014</div>
+<div style="margin:8px auto 12px;width:16px;height:16px;border-radius:50%;background:white;border:4px solid #818cf8;box-shadow:0 0 0 4px rgba(129,140,248,0.2)"></div>
+<div style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 14px;border-radius:14px;background:linear-gradient(135deg,#f59e0b,#b45309);letter-spacing:.5px;margin-bottom:14px">THSD7A</div>
+<div style="font-size:11px;color:#475569;line-height:1.5;max-width:170px;margin:0 auto">Second antigen. 10–30% malignancy association.</div>
+</div>
+</div>
+
+<!-- ERA 3: 2019 -->
+<div style="flex:1;padding:0 10px;position:relative">
+<div style="height:6px;background:transparent;border-radius:3px;margin-top:24px"></div>
+<div style="margin-top:20px;text-align:center">
+<div style="display:inline-block;font-size:14px;font-weight:800;color:#6d28d9;padding:5px 14px;border-radius:20px;background:#ede9fe;border:2px solid #a78bfa;margin-bottom:12px">2019</div>
+<div style="margin:8px auto 12px;width:16px;height:16px;border-radius:50%;background:white;border:4px solid #a78bfa;box-shadow:0 0 0 4px rgba(167,139,250,0.2)"></div>
+<div style="margin-bottom:14px">
+<span style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 14px;border-radius:14px;background:linear-gradient(135deg,#10b981,#047857);letter-spacing:.5px;margin:2px">NELL1</span>
+<span style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 14px;border-radius:14px;background:linear-gradient(135deg,#ef4444,#991b1b);letter-spacing:.5px;margin:2px">EXT1/2</span>
+</div>
+<div style="font-size:11px;color:#475569;line-height:1.5;max-width:190px;margin:0 auto">NELL1: malignancy + drugs. EXT1/2: lupus nephritis.</div>
+</div>
+</div>
+
+<!-- ERA 4: 2020–21 -->
+<div style="flex:1;padding:0 10px;position:relative">
+<div style="height:6px;background:transparent;border-radius:3px;margin-top:24px"></div>
+<div style="margin-top:20px;text-align:center">
+<div style="display:inline-block;font-size:14px;font-weight:800;color:#be185d;padding:5px 14px;border-radius:20px;background:#fce7f3;border:2px solid #ec4899;margin-bottom:12px">2020–21</div>
+<div style="margin:8px auto 12px;width:16px;height:16px;border-radius:50%;background:white;border:4px solid #ec4899;box-shadow:0 0 0 4px rgba(236,72,153,0.2)"></div>
+<div style="margin-bottom:14px">
+<span style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 12px;border-radius:14px;background:linear-gradient(135deg,#14b8a6,#0f766e);letter-spacing:.5px;margin:2px">SEMA3B</span>
+<span style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 12px;border-radius:14px;background:linear-gradient(135deg,#8b5cf6,#5b21b6);letter-spacing:.5px;margin:2px">PCDH7</span>
+<span style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 12px;border-radius:14px;background:linear-gradient(135deg,#ec4899,#9d174d);letter-spacing:.5px;margin:2px">NDNF</span>
+</div>
+<div style="font-size:11px;color:#475569;line-height:1.5;max-width:190px;margin:0 auto">SEMA3B: pediatric. PCDH7: mild. NDNF: syphilis.</div>
+</div>
+</div>
+
+<!-- ERA 5: 2022–25 -->
+<div style="flex:1;padding:0 10px;position:relative">
+<div style="height:6px;background:transparent;border-radius:3px;margin-top:24px"></div>
+<div style="margin-top:20px;text-align:center">
+<div style="display:inline-block;font-size:14px;font-weight:800;color:#be185d;padding:5px 14px;border-radius:20px;background:#fce7f3;border:2px solid #f472b6;margin-bottom:12px">2022–25</div>
+<div style="margin:8px auto 12px;width:16px;height:16px;border-radius:50%;background:white;border:4px solid #f472b6;box-shadow:0 0 0 4px rgba(244,114,182,0.2)"></div>
+<div style="margin-bottom:14px">
+<span style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 12px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#3730a3);letter-spacing:.5px;margin:2px">NCAM1</span>
+<span style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 12px;border-radius:14px;background:linear-gradient(135deg,#f97316,#9a3412);letter-spacing:.5px;margin:2px">FAT1</span>
+<span style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 12px;border-radius:14px;background:linear-gradient(135deg,#64748b,#334155);letter-spacing:.5px;margin:2px">HTRA1</span>
+<span style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 12px;border-radius:14px;background:linear-gradient(135deg,#64748b,#334155);letter-spacing:.5px;margin:2px">NTNG1</span>
+<span style="display:inline-block;font-size:12px;font-weight:800;color:white;padding:7px 12px;border-radius:14px;background:linear-gradient(135deg,#64748b,#334155);letter-spacing:.5px;margin:2px">PCSK6</span>
+</div>
+<div style="font-size:11px;color:#475569;line-height:1.5;max-width:190px;margin:0 auto">NCAM1: lupus. FAT1: post-HSCT. Others: emerging.</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:26px">
+<div style="background:white;border:1px solid #e2e8f0;border-radius:14px;padding:14px 16px">
+<div style="font-size:12px;font-weight:800;color:#0369a1;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#38bdf8;display:inline-block"></span>2009 · PLA2R</div>
+<div style="font-size:12px;color:#475569;line-height:1.5">First podocyte autoantigen. ~70–80% of primary MN. Transformed diagnosis and monitoring.</div>
+</div>
+<div style="background:white;border:1px solid #e2e8f0;border-radius:14px;padding:14px 16px">
+<div style="font-size:12px;font-weight:800;color:#b45309;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#f59e0b;display:inline-block"></span>2014 · THSD7A</div>
+<div style="font-size:12px;color:#475569;line-height:1.5">Carries a 10–30% malignancy association — mandatory cancer screening.</div>
+</div>
+<div style="background:white;border:1px solid #e2e8f0;border-radius:14px;padding:14px 16px">
+<div style="font-size:12px;font-weight:800;color:#047857;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#10b981;display:inline-block"></span>2019 · NELL1 & EXT1/2</div>
+<div style="font-size:12px;color:#475569;line-height:1.5">NELL1: malignancy + drugs. EXT1/2: membranous lupus nephritis.</div>
+</div>
+<div style="background:white;border:1px solid #e2e8f0;border-radius:14px;padding:14px 16px">
+<div style="font-size:12px;font-weight:800;color:#be185d;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#ec4899;display:inline-block"></span>2020–25 · Emerging</div>
+<div style="font-size:12px;color:#475569;line-height:1.5">SEMA3B, PCDH7, NDNF, NCAM1, FAT1, HTRA1, NTNG1, PCSK6 — distinct associations.</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- FIGURE 2 — CLASSIFICATION EVOLUTION                          -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-title"><i class="fas fa-sitemap"></i> Figure 2 · Evolution of MN classification</div>
+<div class="fig2-wrap">
+<div style="font-size:15px;font-weight:700;color:#1a365d;margin-bottom:6px;text-align:center">From primary vs. secondary → antigen-based reclassification</div>
+<div style="font-size:12px;color:#56759b;text-align:center;margin-bottom:20px">Zand/Fervenza/Sethi AJKD 2025 · Sethi/Fervenza Nat Rev Nephrol 2025</div>
+<div class="fig2-grid">
+<div class="fig2-panel">
+<h5>Panel A · Classical classification</h5>
+<div class="fig2-row primary"><span class="fig2-tag pla2r">PRIMARY</span><span style="font-weight:600">~70–80% of MN</span><span class="fig2-detail">PLA2R / THSD7A</span></div>
+<div class="fig2-row secondary"><span class="fig2-tag other">SECONDARY</span><span style="font-weight:600">~20–30% of MN</span><span class="fig2-detail">Lupus, hepatitis, drugs, malignancy</span></div>
+<div style="font-size:12px;color:#56759b;margin-top:14px;padding-top:12px;border-top:1px dashed #d8e6f5;line-height:1.6"><strong>Limitation:</strong> "Antigen void" — many secondary cases lacked a defined target antigen.</div>
+</div>
+<div class="fig2-panel">
+<h5>Panel B · Antigen-based reclassification (current)</h5>
+<div class="fig2-row antigen"><span class="fig2-tag pla2r">PLA2R</span><span>Primary/autoimmune</span></div>
+<div class="fig2-row antigen"><span class="fig2-tag thsd7a">THSD7A</span><span>Primary + malignancy (10–30%)</span></div>
+<div class="fig2-row antigen"><span class="fig2-tag nell1">NELL1</span><span>Malignancy · drugs</span></div>
+<div class="fig2-row antigen"><span class="fig2-tag ext">EXT1/2</span><span>Lupus nephritis</span></div>
+<div class="fig2-row antigen"><span class="fig2-tag ndnf">NDNF</span><span>Syphilis</span></div>
+<div class="fig2-row antigen"><span class="fig2-tag ncam1">NCAM1</span><span>Lupus</span></div>
+<div class="fig2-row antigen"><span class="fig2-tag fat1">FAT1</span><span>Post-HSCT/GVHD</span></div>
+<div class="fig2-row antigen"><span class="fig2-tag other">Others</span><span>PCDH7, SEMA3B, HTRA1, NTNG1, PCSK6</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MAIN GRID — LEFT AND RIGHT COLUMNS                           -->
+<!-- ============================================================ -->
+<div class="top-grid">
+<!-- LEFT COLUMN -->
+<div>
+<div class="card">
+<div class="card-title"><i class="fas fa-sliders-h"></i> Current data</div>
+<div class="unit-toggle" id="unitToggle">
+<button class="active" data-unit="si"><i class="fas fa-flask"></i> SI (g/24h, g/L)</button>
+<button data-unit="us"><i class="fas fa-weight"></i> US (UPCR g/g, g/dL)</button>
+</div>
+<div class="input-row">
+<div class="input-group"><label>eGFR <span id="egfrUnitLabel">mL/min/1.73m²</span></label><input type="number" id="egfr" value="72" step="1" min="5" max="200"></div>
+<div class="input-group"><label>Proteinuria <span id="protUnitLabel">g/24h</span></label><input type="number" id="proteinuria" value="1.8" step="0.1" min="0.1"></div>
+</div>
+<div class="input-group"><label><i class="fas fa-vial"></i> anti-PLA2R antibody (RU/mL)</label><input type="number" id="pla2r" value="18" step="1" min="0" max="500"></div>
+<div class="input-group"><label><i class="fas fa-weight"></i> Serum albumin <span id="albUnitLabel">g/L</span></label><input type="number" id="albumin" value="36" step="0.5"></div>
+<div class="input-group"><label><i class="fas fa-microscope"></i> Biopsy result</label>
+<select id="biopsy">
+<option value="pla2r-positive" selected>PLA2R-positive, subepithelial deposits</option>
+<option value="pla2r-negative">PLA2R-negative, biopsy-proven MN</option>
+<option value="not-done">Not done / pending</option>
+<option value="other-antigen">Other antigen (THSD7A, NELL1, etc)</option>
+</select></div>
+<div class="input-group"><label><i class="fas fa-dna"></i> Identified antigen</label>
+<select id="antigen">
+<option value="pla2r" selected>PLA2R (primary/autoimmune)</option>
+<option value="thsd7a">THSD7A (malignancy association)</option>
+<option value="nell1">NELL1 (malignancy, drugs)</option>
+<option value="ext12">EXT1/EXT2 (autoimmune, lupus)</option>
+<option value="ndnf">NDNF (syphilis)</option>
+<option value="ncam1">NCAM1 (lupus)</option>
+<option value="fat1">FAT1 (HSCT)</option>
+<option value="pcdh7">PCDH7 (mild/primary-like)</option>
+<option value="sema3b">SEMA3B (pediatric)</option>
+<option value="negative">All antigens negative</option>
+<option value="unknown">Not tested / unknown</option>
+</select></div>
+<div class="flex-space mt-2"><span class="pill"><i class="far fa-calendar"></i> updated 2026</span><button class="btn-primary" id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button></div>
+</div>
+
+<div class="card">
+<div class="card-title"><i class="fas fa-user-cog"></i> Patient parameters (for dosing)</div>
+<div class="input-row">
+<div class="input-group"><label>Weight (kg)</label><input type="number" id="weight" value="70" step="1" min="20" max="200"></div>
+<div class="input-group"><label>Age (years)</label><input type="number" id="age" value="45" step="1" min="1" max="100"></div>
+</div>
+<div class="input-row">
+<div class="input-group"><label>Sex</label><select id="sex"><option value="male" selected>Male</option><option value="female">Female</option></select></div>
+<div class="input-group"><label>BSA (m²) — auto</label><input type="number" id="bsa" value="1.85" step="0.01" min="0.5" max="3"></div>
+</div>
+<div class="calc-info"><i class="fas fa-info-circle"></i> Body surface area auto-calculated (Mosteller formula).</div>
+</div>
+
+<div class="card">
+<div class="card-title"><i class="fas fa-shield-alt"></i> Risk & guidance</div>
+<div class="risk-box">
+<div class="risk-label"><i class="fas fa-flag"></i> risk of progression</div>
+<div class="risk-value low" id="riskLevel">LOW</div>
+<div style="font-size:14px;color:#2f4d73" id="riskDetail">eGFR 72, proteinuria 1.8, PLA2R 18</div>
+</div>
+<div style="margin:6px 0 12px;display:flex;gap:10px;flex-wrap:wrap">
+<span class="pill" id="remissionStatus"><i class="far fa-circle"></i> No remission</span>
+<span class="pill" id="immunosuppressionIndication"><i class="fas fa-shield-alt"></i> Supportive care only</span>
+</div>
+<div style="font-weight:600;font-size:16px;margin-top:6px">Management plan</div>
+<ul class="rec-list" id="recList"></ul>
+<div class="biopsy-result"><i class="fas fa-microscope"></i> Biopsy: <span id="biopsyText">PLA2R-positive</span></div>
+</div>
+
+<div class="card">
+<div class="card-title"><i class="fas fa-arrow-trend-up"></i> Trend status</div>
+<div style="display:flex;gap:14px;flex-wrap:wrap">
+<span class="trend-badge" id="trendEgfrBadge"><i class="fas fa-minus"></i> eGFR stable</span>
+<span class="trend-badge" id="trendProtBadge"><i class="fas fa-minus"></i> proteinuria stable</span>
+<span class="trend-badge" id="trendPla2rBadge"><i class="fas fa-minus"></i> PLA2R stable</span>
+</div>
+<div class="trend-summary-box"><i class="fas fa-info-circle" style="color:#1f4f8a"></i><span id="trendMessage">Add historical values below to see trends.</span></div>
+</div>
+
+<div class="card">
+<div class="card-title"><i class="fas fa-book-medical"></i> anti-PLA2R: serum vs. biopsy staining</div>
+<div class="explain-box" style="margin-top:0">
+<div class="explain-grid">
+<div class="explain-item">
+<h5><i class="fas fa-vial" style="color:#2a7de1"></i> Serum anti-PLA2R antibody</h5>
+<ul>
+<li><strong>Diagnostic:</strong> Positive in ~70–80% of primary MN. High titre (&gt;50 RU/mL) with nephrotic proteinuria strongly supports primary MN — may permit noninvasive diagnosis in typical cases.</li>
+<li><strong>Disease activity:</strong> Titre tracks immunologic activity — rising titre predicts relapse; falling titre precedes clinical remission by months.</li>
+<li><strong>Prognostic:</strong> Persistently high or rising titre = higher risk of progression and lower chance of spontaneous remission.</li>
+<li><strong>Monitoring treatment:</strong> Serological remission (titre undetectable) is an early, sensitive marker of response to rituximab or CNI; guides re-dosing at 6 months.</li>
+<li><strong>Transplant:</strong> Pre-transplant titre predicts recurrent MN in the allograft.</li>
+<li><strong>Limitation:</strong> Can be negative early in disease or after immunosuppression — a negative serum test does not exclude PLA2R-associated MN.</li>
+</ul>
+</div>
+<div class="explain-item">
+<h5><i class="fas fa-microscope" style="color:#7c3aed"></i> Renal biopsy PLA2R staining</h5>
+<ul>
+<li><strong>Diagnosis:</strong> Granular IgG4-dominant deposits along the subepithelial side of the GBM with PLA2R co-localisation — the histologic hallmark of primary MN.</li>
+<li><strong>Discordance:</strong> Biopsy-positive but serum-negative can occur early or after immunosuppression; biopsy staining is more stable over time.</li>
+<li><strong>Immunologic remission:</strong> Loss of PLA2R staining on repeat biopsy correlates with sustained clinical remission.</li>
+<li><strong>Secondary vs. primary:</strong> PLA2R staining strongly favours primary MN. Absence prompts workup for secondary causes or other antigens.</li>
+<li><strong>Antigen panel:</strong> Full IF panel on biopsy tissue is required to identify non-PLA2R antigens — serum tests exist only for PLA2R and THSD7A.</li>
+<li><strong>Limitation:</strong> Staining is qualitative; serum titre is quantitative and better for serial monitoring.</li>
+</ul>
+</div>
+</div>
+<div style="margin-top:14px;font-size:13px;color:#3f5c7e;background:#fff;border-radius:12px;padding:12px 16px;border:1px dashed #b0c8e0;line-height:1.7">
+<i class="fas fa-lightbulb" style="color:#b57c1c"></i> <strong>Clinical pearl:</strong> Use <em>both</em> together — serum titre for real-time monitoring and treatment decisions; biopsy staining for definitive diagnosis and antigen classification. <strong>Rising serum titre with stable biopsy staining = immunologic relapse before clinical relapse.</strong>
+</div>
+<div style="margin-top:10px;font-size:13px;color:#3f5c7e;background:#f5f9ff;border-radius:12px;padding:12px 16px;border:1px dashed #b0c8e0;line-height:1.7">
+<i class="fas fa-sync-alt" style="color:#2a7de1"></i> <strong>Practical algorithm:</strong> Order serum anti-PLA2R at diagnosis → if positive and typical presentation, treat as PLA2R-associated MN. If negative, request full antigen IF panel on biopsy tissue. If all antigens negative → work up aggressively for <strong>secondary MN</strong>. Monitor serum anti-PLA2R at 3, 6, 12 months during treatment.
+</div>
+</div>
+</div>
+</div>
+
+<!-- RIGHT COLUMN -->
+<div>
+<div class="card">
+<div class="card-title"><i class="fas fa-layer-group"></i> Antigen-based stepwise approach</div>
+
+<div class="step-box step-1">
+<div class="step-number">1</div>
+<div style="font-weight:700;font-size:16px;color:#1a4c8c;margin-bottom:10px"><i class="fas fa-dna"></i> STEP 1: Identify the target antigen</div>
+<div style="font-size:14px;color:#2a405c;line-height:1.7">
+<p style="margin-bottom:8px">MN is now classified by <strong>target antigen</strong>. Antigen discovery has filled the prior "antigen void."</p>
+<p><strong>Serum testing:</strong> anti-PLA2R ELISA first-line; anti-THSD7A if PLA2R-negative. Other antigens require <em>biopsy tissue staining</em>.</p>
+</div>
+</div>
+
+<div class="step-box step-2">
+<div class="step-number">2</div>
+<div style="font-weight:700;font-size:16px;color:#b34033;margin-bottom:10px"><i class="fas fa-vial"></i> STEP 2: Antigen–disease associations</div>
+<table class="antigen-table">
+<thead><tr><th>Antigen</th><th>Association</th><th>Workup</th><th>Therapy</th></tr></thead>
+<tbody>
+<tr><td><span class="badge-antigen badge-pla2r">PLA2R</span></td><td>Primary/autoimmune</td><td>No cancer screen unless atypical</td><td>Standard IST</td></tr>
+<tr><td><span class="badge-antigen badge-thsd7a">THSD7A</span></td><td>Primary + malignancy (10–30%)</td><td><strong>Mandatory cancer screening</strong></td><td>Treat cancer; IST if high risk</td></tr>
+<tr><td><span class="badge-antigen badge-nell1">NELL1</span></td><td>Malignancy, drugs</td><td>Cancer screen; drug history</td><td>Discontinue drug; treat cancer</td></tr>
+<tr><td><span class="badge-antigen badge-ext">EXT1/2</span></td><td>Lupus nephritis</td><td>ANA/anti-dsDNA, C3/C4</td><td>Treat lupus (class V LN)</td></tr>
+<tr><td><span class="badge-antigen badge-ndnf">NDNF</span></td><td>Syphilis</td><td>RPR/VDRL</td><td>Antibiotics — may resolve MN</td></tr>
+<tr><td><span class="badge-antigen badge-ncam1">NCAM1</span></td><td>Lupus</td><td>Lupus serologies</td><td>Treat lupus</td></tr>
+<tr><td><span class="badge-antigen badge-fat1">FAT1</span></td><td>Post-HSCT/GVHD</td><td>Transplant history</td><td>GVHD care</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="step-box step-3">
+<div class="step-number">3</div>
+<div style="font-weight:700;font-size:16px;color:#5b21b6;margin-bottom:10px"><i class="fas fa-search"></i> STEP 3: Screen for secondary causes</div>
+<div style="font-size:14px;color:#2a405c;line-height:1.7">
+<p style="margin-bottom:8px"><strong>Biopsy features favoring secondary:</strong> mesangial/subendothelial deposits, full-house IF, non-IgG4-dominant subclass, endocapillary proliferation.</p>
+<p><strong>Screen:</strong> autoimmune, infections (HBV/HCV/syphilis), malignancy, drugs (NSAIDs, penicillamine, anti-TNF, lipoic acid), transplant/GVHD.</p>
+</div>
+</div>
+
+<div class="step-box step-4">
+<div class="step-number">4</div>
+<div style="font-weight:700;font-size:16px;color:#1f8b4c;margin-bottom:10px"><i class="fas fa-prescription-bottle"></i> STEP 4: Risk-stratified therapy</div>
+<div style="font-size:14px;color:#2a405c;line-height:1.7">
+<p>See KDIGO Table 3 and Figure 4 algorithm below.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- KDIGO TABLES 2 & 3                                           -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-title"><i class="fas fa-table"></i> KDIGO 2021 · Risk stratification — explained simply</div>
+<div class="warning-box" style="background:#eef4fa;border-color:#2a7de1">
+<div style="display:flex;align-items:center;gap:10px">
+<i class="fas fa-lightbulb" style="color:#2a7de1;font-size:20px"></i>
+<strong style="color:#1a4c8c;font-size:15px">How to read these tables</strong>
+</div>
+<p style="font-size:13px;color:#2a405c;margin-top:8px;margin-left:30px;line-height:1.7">
+<strong>Table 2</strong> shows the individual clinical measurements. <strong>Table 3</strong> shows how those measurements combine into a risk category, and what treatment each category requires. Think of Table 2 as the ingredients and Table 3 as the recipe.
+</p>
+</div>
+
+<div class="section-title" style="margin-top:16px">Table 2 · Individual clinical criteria (the ingredients)</div>
+<table class="kdigo-table">
+<thead>
+<tr>
+<th style="width:140px">Measurement</th>
+<th><span style="color:#1f8b4c">Low risk</span></th>
+<th><span style="color:#856404">Moderate risk</span></th>
+<th><span style="color:#721c24">High risk</span></th>
+<th><span style="color:#fff;background:#e53e3e;padding:2px 8px;border-radius:10px">Very high risk</span></th>
+</tr>
+</thead>
+<tbody>
+<tr><td><strong>Proteinuria (g/24h)</strong></td><td style="background:#f0fff4">&lt; 3.5</td><td style="background:#fffaf0">3.5 – 8</td><td style="background:#fff5f5">&gt; 8</td><td style="background:#ffe8e8">Life-threatening nephrotic syndrome</td></tr>
+<tr><td><strong>Serum albumin (g/L)</strong></td><td style="background:#f0fff4">&gt; 30</td><td style="background:#fffaf0">25 – 30</td><td style="background:#fff5f5">&lt; 25</td><td style="background:#ffe8e8">Severe hypoalbuminemia + complications</td></tr>
+<tr><td><strong>eGFR (mL/min/1.73m²)</strong></td><td style="background:#f0fff4">&gt; 60</td><td style="background:#fffaf0">&gt; 60 (stable)</td><td style="background:#fff5f5">&lt; 60 or declining</td><td style="background:#ffe8e8">Rapid decline</td></tr>
+<tr><td><strong>anti-PLA2R (RU/mL)</strong></td><td style="background:#f0fff4">Negative or low</td><td style="background:#fffaf0">&lt; 50</td><td style="background:#fff5f5">&gt; 50 or rising</td><td style="background:#ffe8e8">Very high / rising rapidly</td></tr>
+</tbody>
+</table>
+<div style="font-size:12px;color:#56759b;margin-top:8px;padding:10px 14px;background:#f8faff;border-radius:10px;border-left:3px solid #2a7de1">
+<strong>Important:</strong> A patient can have values in <em>different columns</em> for different measurements. Classification uses the <strong>worst</strong> parameter.
+</div>
+
+<div class="section-title">Table 3 · Combined risk category and treatment (the recipe)</div>
+<table class="kdigo-table">
+<thead><tr><th style="width:110px">Risk tier</th><th>When to use this tier</th><th>What to do</th><th>Grade</th></tr></thead>
+<tbody>
+<tr>
+<td><span class="risk-pill low">LOW</span></td>
+<td style="background:#f0fff4"><strong>All</strong> of these:<br>• Proteinuria &lt; 3.5 g/d<br>• Albumin &gt; 30 g/L<br>• eGFR &gt; 60<br>• No progression risk factors</td>
+<td style="background:#f0fff4"><strong>No immunosuppression.</strong><br>Supportive care only:<br>• ACEi/ARB, BP &lt; 130/80<br>• SGLT2i if eGFR ≥ 20<br>• Diuretics, sodium restriction<br>• Reassess every 3–6 months</td>
+<td style="background:#f0fff4"><strong>1B</strong></td>
+</tr>
+<tr>
+<td><span class="risk-pill mod">MODERATE</span></td>
+<td style="background:#fffaf0"><strong>Any</strong> of these:<br>• Proteinuria 3.5–8 g/d<br>• eGFR normal<br>• No high-risk features<br>• Proteinuria not falling &gt; 50% after 6 mo conservative care</td>
+<td style="background:#fffaf0"><strong>Immunosuppression — shared decision:</strong><br>• Rituximab (1st line)<br>OR<br>• CNI (tacrolimus/cyclosporine)<br>OR<br>• Cyclophosphamide + alternate-month steroids</td>
+<td style="background:#fffaf0"><strong>1B</strong></td>
+</tr>
+<tr>
+<td><span class="risk-pill high">HIGH</span></td>
+<td style="background:#fff5f5"><strong>Any</strong> of these:<br>• Proteinuria &gt; 8 g/d<br>• eGFR &lt; 60 or declining<br>• Albumin &lt; 25 g/L<br>• anti-PLA2R &gt; 50 RU/mL</td>
+<td style="background:#fff5f5"><strong>Immunosuppression — treat:</strong><br>• Rituximab 1g × 2 (days 0, 14)<br>OR<br>• Cyclophosphamide + alternate-month steroids (Ponticelli)</td>
+<td style="background:#fff5f5"><strong>1B</strong></td>
+</tr>
+<tr>
+<td><span class="risk-pill vhigh">VERY HIGH</span></td>
+<td style="background:#ffe8e8"><strong>Any</strong> of these:<br>• Life-threatening nephrotic syndrome<br>• Rapid unexplained eGFR decline<br>• Thromboembolic complications</td>
+<td style="background:#ffe8e8"><strong>Most effective but most toxic:</strong><br>• Cyclophosphamide + prednisolone<br>• Consider combination: rituximab + cyclophosphamide + steroids (RCP)<br>• Anticoagulation if albumin &lt; 25</td>
+<td style="background:#ffe8e8"><strong>1B</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<!-- FIGURE 4 — RISK-BASED THERAPY ALGORITHM                      -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-title"><i class="fas fa-project-diagram"></i> Figure 4 · Risk-based therapy algorithm</div>
+<div style="background:#fafcff;border-radius:20px;padding:24px 20px;border:1px solid #e6edf5;overflow-x:auto">
+<div style="font-size:15px;font-weight:700;color:#1a365d;margin-bottom:18px;text-align:center">KDIGO 2021 risk-based therapy in membranous nephropathy</div>
+<div style="display:flex;flex-direction:column;align-items:center;min-width:720px">
+
+<div style="background:white;border:2px solid #2a7de1;border-radius:14px;padding:12px 20px;font-size:13px;font-weight:600;color:#1a4c8c;text-align:center;min-width:220px;max-width:360px;box-shadow:0 3px 8px rgba(42,125,225,0.08)">
+Kidney biopsy confirms MN
+<div style="font-weight:400;font-size:12px;color:#4a5568;margin-top:4px">Serum anti-PLA2R ± antigen panel</div>
+</div>
+<div style="width:2px;height:26px;background:#b0c4d8;position:relative">
+<div style="position:absolute;bottom:-1px;left:-5px;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid #b0c4d8"></div>
+</div>
+
+<div style="background:#f7fafc;border:2px solid #a0aec0;border-radius:14px;padding:12px 20px;font-size:13px;font-weight:600;color:#4a5568;text-align:center;min-width:220px;max-width:360px;box-shadow:0 3px 8px rgba(160,174,192,0.08)">
+Assess risk of kidney function deterioration
+<div style="font-weight:400;font-size:12px;color:#4a5568;margin-top:4px">Clinical criteria (Table 2) + risk classification (Table 3)</div>
+</div>
+<div style="width:2px;height:26px;background:#b0c4d8;position:relative">
+<div style="position:absolute;bottom:-1px;left:-5px;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid #b0c4d8"></div>
+</div>
+
+<div style="background:#faf5ff;border:2px solid #7c3aed;border-radius:14px;padding:12px 20px;font-size:13px;font-weight:600;color:#5b21b6;text-align:center;min-width:220px;max-width:360px;box-shadow:0 3px 8px rgba(124,58,237,0.08)">
+Antigen identified?
+<div style="font-weight:400;font-size:12px;color:#4a5568;margin-top:4px">Directs secondary work-up</div>
+</div>
+<div style="width:2px;height:26px;background:#b0c4d8;position:relative">
+<div style="position:absolute;bottom:-1px;left:-5px;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid #b0c4d8"></div>
+</div>
+
+<div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap;margin-top:6px">
+
+<div style="display:flex;flex-direction:column;align-items:center">
+<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:6px;background:#d4edda;color:#0e5e32">PLA2R / THSD7A / primary-like</span>
+<div style="background:#f0fff4;border:2px solid #1f8b4c;border-radius:14px;padding:12px 20px;font-size:13px;font-weight:600;color:#0e5e32;text-align:center;min-width:220px;max-width:340px;box-shadow:0 3px 8px rgba(31,139,76,0.08)">
+Primary MN pathway
+<div style="font-weight:400;font-size:12px;color:#4a5568;margin-top:4px">Risk-stratified IST</div>
+</div>
+<div style="width:2px;height:22px;background:#b0c4d8;position:relative">
+<div style="position:absolute;bottom:-1px;left:-5px;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid #b0c4d8"></div>
+</div>
+<div style="background:#f0fff4;border:2px solid #1f8b4c;border-radius:14px;padding:12px 20px;font-size:12px;font-weight:600;color:#0e5e32;text-align:left;min-width:220px;max-width:340px;line-height:1.9;box-shadow:0 3px 8px rgba(31,139,76,0.08)">
+<strong>Low</strong> → no IST<br>
+<strong>Moderate</strong> → RTX / CNI / CYC<br>
+<strong>High</strong> → RTX or CYC + steroids<br>
+<strong>Very high</strong> → CYC + prednisolone
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;align-items:center">
+<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:6px;background:#fee9e7;color:#b34033">NELL1 / NDNF / NCAM1 / EXT1/2 / FAT1 / negative</span>
+<div style="background:#fffaf7;border:2px solid #d97747;border-radius:14px;padding:12px 20px;font-size:13px;font-weight:600;color:#b34033;text-align:center;min-width:220px;max-width:340px;box-shadow:0 3px 8px rgba(217,119,71,0.08)">
+Secondary MN pathway
+<div style="font-weight:400;font-size:12px;color:#4a5568;margin-top:4px">Treat underlying cause</div>
+</div>
+<div style="width:2px;height:22px;background:#b0c4d8;position:relative">
+<div style="position:absolute;bottom:-1px;left:-5px;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid #b0c4d8"></div>
+</div>
+<div style="background:#fffaf7;border:2px solid #d97747;border-radius:14px;padding:12px 20px;font-size:12px;font-weight:600;color:#b34033;text-align:left;min-width:220px;max-width:340px;line-height:1.9;box-shadow:0 3px 8px rgba(217,119,71,0.08)">
+<strong>Malignancy</strong> → cancer therapy<br>
+<strong>Syphilis</strong> → antibiotics<br>
+<strong>Lupus</strong> → class V LN protocols<br>
+<strong>Drugs</strong> → discontinue agent<br>
+<strong>GVHD</strong> → GVHD care
+</div>
+</div>
+
+</div>
+
+<div style="width:2px;height:26px;background:#b0c4d8;position:relative;margin-top:14px">
+<div style="position:absolute;bottom:-1px;left:-5px;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid #b0c4d8"></div>
+</div>
+<div style="background:#f7fafc;border:2px solid #a0aec0;border-radius:14px;padding:12px 20px;font-size:12px;font-weight:600;color:#4a5568;text-align:center;max-width:520px;box-shadow:0 3px 8px rgba(160,174,192,0.08)">
+<strong>Re-evaluate risk at every visit</strong>
+<div style="font-weight:400;font-size:12px;color:#4a5568;margin-top:4px">Proteinuria · eGFR · albumin · anti-PLA2R titre</div>
+</div>
+<div style="width:2px;height:26px;background:#b0c4d8;position:relative">
+<div style="position:absolute;bottom:-1px;left:-5px;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid #b0c4d8"></div>
+</div>
+
+<div style="background:#fff5f5;border:2px solid #e53e3e;border-radius:14px;padding:12px 20px;font-size:12px;font-weight:600;color:#9b2c2c;text-align:center;max-width:520px;box-shadow:0 3px 8px rgba(229,62,62,0.08)">
+<strong>Very high risk / rapidly progressive</strong>
+<div style="font-weight:400;font-size:12px;color:#4a5568;margin-top:4px">Cyclophosphamide + prednisolone — most effective but most toxic. Cap cumulative dose.</div>
+</div>
+
+</div>
+<div style="font-size:11px;color:#56759b;text-align:center;margin-top:20px;font-style:italic;line-height:1.6">
+Adapted from Figure 4, KDIGO 2021 Clinical Practice Guideline.<br>
+Risk profile will change during follow-up — evaluate regularly.
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ANTICOAGULATION                                              -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-title"><i class="fas fa-heart-pulse"></i> Anticoagulation in nephrotic syndrome — when to start & stop</div>
+<div class="anticoag-wrap">
+<div class="anticoag-title"><i class="fas fa-exclamation-triangle"></i> Membranous nephropathy carries the highest thromboembolic risk of all nephrotic glomerular diseases</div>
+<div style="font-size:13px;color:#9b2c2c;margin-top:6px;line-height:1.6">
+Venous thromboembolism (VTE) often occurs within the <strong>first 6 months</strong> of diagnosis. Risk increases as serum albumin falls. The decision to anticoagulate is based on estimating thromboembolic risk vs. bleeding risk.
+</div>
+<div class="anticoag-grid">
+<div class="anticoag-panel">
+<h5><i class="fas fa-play-circle"></i> WHEN TO START (prophylactic)</h5>
+<ul>
+<li><strong>Serum albumin &lt; 25 g/L</strong> — strongest single predictor; VTE risk rises sharply below this threshold</li>
+<li><strong>Serum albumin 25–30 g/L</strong> — consider if additional risk factors present (proteinuria &gt; 8 g/d, BMI &gt; 35, prior VTE, immobilization, genetic thrombophilia)</li>
+<li><strong>Proteinuria &gt; 10 g/d</strong> — independent risk factor</li>
+<li><strong>First 6 months after diagnosis</strong> — highest-risk window</li>
+<li><strong>Use the online risk tool</strong> (UNC bleed risk calculator) to estimate patient-specific bleeding risk before starting</li>
+<li><strong>Decision rule:</strong> Anticoagulate when estimated VTE risk <em>exceeds</em> estimated bleeding risk</li>
+</ul>
+</div>
+<div class="anticoag-panel">
+<h5><i class="fas fa-stop-circle"></i> WHEN TO STOP</h5>
+<ul>
+<li><strong>After complete remission</strong> — proteinuria &lt; 0.3 g/d and albumin normalized (&gt; 35 g/L)</li>
+<li><strong>After partial remission with stable albumin</strong> — proteinuria &lt; 3.5 g/d and albumin &gt; 30 g/L for ≥ 3 months</li>
+<li><strong>If bleeding occurs</strong> — immediately stop, reverse if indicated, reassess risk-benefit</li>
+<li><strong>If a thromboembolic event occurred</strong> — anticoagulation is generally continued <strong>indefinitely</strong> (not stopped after remission)</li>
+<li><strong>Typical prophylactic duration</strong> — 3–6 months, or until remission of nephrotic syndrome (mean ~4 months in one study)</li>
+</ul>
+</div>
+</div>
+<div style="margin-top:18px">
+<div class="section-title" style="border-color:#f0c0c0">Anticoagulant options and dosing</div>
+<table class="anticoag-table">
+<thead><tr><th>Agent</th><th>Dose</th><th>When to use</th><th>Cautions</th></tr></thead>
+<tbody>
+<tr><td><strong>Warfarin</strong></td><td>Target INR 2–3<br>Start 5 mg/d, titrate</td><td>Preferred for <strong>treatment</strong> of confirmed VTE (bridged with IV heparin initially). Long-term experience. Requires frequent INR monitoring because warfarin-protein binding fluctuates with changing albumin.</td><td>More bleeding events vs. apixaban in one NS study (17% vs. 3.3%). Drug interactions.</td></tr>
+<tr><td><strong>LMWH</strong><br>(e.g., enoxaparin)</td><td>Prophylactic: 40 mg SC daily<br>Treatment: 1 mg/kg SC BID</td><td>Prophylaxis during transient high-risk events. Bridge to warfarin for confirmed VTE. Higher doses may be needed due to antithrombin III urinary loss.</td><td>Reduce dose if CrCl &lt; 30. Avoid in kidney failure. Monitor anti-Xa if very high BMI or severe hypoalbuminemia.</td></tr>
+<tr><td><strong>Apixaban</strong> (DOAC)</td><td>2.5 mg BID (prophylaxis)<br>5 mg BID (treatment)</td><td>Growing evidence as alternative to warfarin for prophylaxis. One study showed <strong>no VTE events and significantly fewer bleeds</strong> vs. warfarin (3.3% vs. 17%, p=0.003).</td><td>Not formally recommended by KDIGO — "not systematically studied in NS; pharmacokinetics affected by hypoalbuminemia and urinary loss."</td></tr>
+<tr><td><strong>Rivaroxaban</strong> (DOAC)</td><td>20 mg daily with food</td><td>Same caveats as apixaban. 66% urinary clearance; 92–95% albumin-bound — effects of hypoalbuminemia unknown.</td><td>Higher urinary clearance than apixaban (66% vs. 27%). Less favorable pharmacokinetic profile in NS.</td></tr>
+<tr><td><strong>Aspirin</strong></td><td>75–100 mg daily</td><td><strong>Insufficient</strong> to prevent VTE. May be used for arterial thromboprophylaxis in select patients when VTE risk is lower.</td><td>Not recommended as sole agent for VTE prophylaxis in NS.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="warning-box" style="margin-top:16px">
+<div style="display:flex;align-items:center;gap:10px"><i class="fas fa-exclamation-triangle"></i><strong>DOACs in nephrotic syndrome — key limitation</strong></div>
+<p style="font-size:13px;color:#5a3e3e;margin-top:8px;margin-left:30px;line-height:1.7">
+DOACs are heavily albumin-bound (apixaban 92–94%, rivaroxaban 92–95%) and are lost in urine when proteinuria is severe. The effects of hypoalbuminemia on drug dosing have <strong>not been studied</strong>. Despite favorable case reports, KDIGO 2021 and KDOQI commentary state these drugs <strong>cannot be generally recommended</strong> in nephrotic patients until pharmacokinetic studies are performed. <strong>Warfarin remains the anticoagulant of choice</strong> for confirmed VTE in MN.
+</p>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RITUXIMAB                                                    -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-title"><i class="fas fa-syringe"></i> Rituximab — infusion protocol & side effects</div>
+
+<div class="rtx-info-wrap">
+<div class="rtx-info-title"><i class="fas fa-clock"></i> Infusion protocol (1g dose)</div>
+<div class="rtx-info-grid">
+<div class="rtx-info-panel">
+<h5><i class="fas fa-pills"></i> Pre-medication (30–60 min before infusion)</h5>
+<table>
+<thead><tr><th>Drug</th><th>Dose</th><th>Route</th></tr></thead>
+<tbody>
+<tr><td>Paracetamol</td><td>1 g</td><td>PO</td></tr>
+<tr><td>Cetirizine (or diphenhydramine)</td><td>10 mg (25–50 mg)</td><td>PO / IV</td></tr>
+<tr><td>Methylprednisolone</td><td>100–125 mg</td><td>IV (30–40 min before)</td></tr>
+</tbody>
+</table>
+<div style="font-size:11px;color:#56759b;margin-top:10px">Pre-medication prevents infusion reactions. Corticosteroid also reduces anti-drug antibody formation.</div>
+</div>
+<div class="rtx-info-panel">
+<h5><i class="fas fa-tachometer-alt"></i> Infusion rate escalation</h5>
+<table>
+<thead><tr><th>Time</th><th>Rate</th><th>Monitoring</th></tr></thead>
+<tbody>
+<tr><td>0–60 min</td><td>50 mg/hr (25 mL/hr)</td><td>BP + pulse q15min</td></tr>
+<tr><td>Each subsequent 30 min</td><td>Double rate (50 → 100 → 200 → 400 mg/hr)</td><td>BP + pulse q1hr</td></tr>
+<tr><td>Maximum</td><td>400 mg/hr</td><td>Observe for reactions</td></tr>
+</tbody>
+</table>
+<div style="font-size:11px;color:#56759b;margin-top:10px">Anaphylaxis kit must be immediately available at first infusion.</div>
+</div>
+</div>
+</div>
+
+<div class="rtx-info-wrap" style="background:linear-gradient(135deg,#fff5f5,#ffe8e8);border-color:#e53e3e">
+<div class="rtx-info-title" style="color:#9b2c2c"><i class="fas fa-exclamation-triangle"></i> Side effects & monitoring</div>
+<div class="rtx-info-grid">
+<div class="rtx-info-panel" style="border-color:#f0c0c0">
+<h5 style="color:#9b2c2c"><i class="fas fa-bolt"></i> Immediate / infusion reactions</h5>
+<ul>
+<li><strong>Infusion reactions</strong> — 13% of patients; fever, chills, hypotension, bronchospasm, urticaria; usually occur 15–90 min after start</li>
+<li><strong>Anaphylaxis</strong> — 5.8% (rare but serious); have epinephrine, hydrocortisone, antihistamine ready</li>
+<li><strong>Management:</strong> Stop infusion, give IV antihistamine + hydrocortisone, restart at half rate if mild</li>
+</ul>
+</div>
+<div class="rtx-info-panel" style="border-color:#f0c0c0">
+<h5 style="color:#9b2c2c"><i class="fas fa-clock"></i> Delayed / long-term</h5>
+<ul>
+<li><strong>Infection</strong> — most common AE; 40.6% overall in one cohort, 17.6% in pMN specifically. Respiratory infections most common (28.3%)</li>
+<li><strong>Hypogammaglobulinemia</strong> — 28.6% with long-term use; monitor IgG levels</li>
+<li><strong>Neutropenia</strong> — 5.5%; late-onset neutropenia can occur weeks after infusion</li>
+<li><strong>Interstitial lung disease / pneumonitis</strong> — rare (0.1%) but serious; consider if new hypoxia/dyspnea</li>
+<li><strong>Hepatitis B reactivation</strong> — screen all patients (HBsAg, anti-HBc) before treatment</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="rtx-info-wrap" style="background:linear-gradient(135deg,#fff8e1,#fff3cd);border-color:#f59e0b">
+<div class="rtx-info-title" style="color:#856404"><i class="fas fa-user-clock"></i> Elderly patients (≥ 60 years) — special caution</div>
+<div style="font-size:13px;color:#5a3e3e;margin-top:8px;line-height:1.7">
+<ul style="list-style:none;padding-left:0">
+<li style="padding:4px 0 4px 18px;position:relative"><span style="position:absolute;left:0;color:#b57c1c">▸</span> <strong>Higher risk of infection</strong> due to age-related immune senescence + B-cell depletion + hypoalbuminemia</li>
+<li style="padding:4px 0 4px 18px;position:relative"><span style="position:absolute;left:0;color:#b57c1c">▸</span> <strong>Low-dose, long-course regimen preferred</strong> — e.g., 375 mg/m² × 4 weekly doses rather than 1g × 2</li>
+<li style="padding:4px 0 4px 18px;position:relative"><span style="position:absolute;left:0;color:#b57c1c">▸</span> <strong>Eosinophil percentage drop at 1 month</strong> may predict infection risk better than CD19+ B-cell count</li>
+<li style="padding:4px 0 4px 18px;position:relative"><span style="position:absolute;left:0;color:#b57c1c">▸</span> Monitor closely for infection in the first 3–6 months after RTX</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- RITUXIMAB NON-RESPONDER                                      -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-title"><i class="fas fa-route"></i> Rituximab non-responder · stepwise algorithm</div>
+<div class="rtx-algo">
+<div style="text-align:center;font-size:14px;font-weight:700;color:#1a365d;margin-bottom:18px">Defined as: no proteinuria reduction &gt; 25% at 6 months AND anti-PLA2R not falling OR rising</div>
+<div class="rtx-steps">
+<div class="rtx-step">
+<div class="rtx-step-num">1</div>
+<h6>Confirm non-response & exclude mimics</h6>
+<p>Verify adherence, rule out infection, malignancy, NSAIDs, or superimposed diabetic nephropathy. Re-check anti-PLA2R, proteinuria, eGFR.</p>
+<span class="action">→ Re-biopsy if atypical course</span>
+</div>
+<div class="rtx-step">
+<div class="rtx-step-num">2</div>
+<h6>Optimize rituximab exposure</h6>
+<p>Check CD19/CD20 count. If B-cells repopulated, re-dose rituximab 1g × 2 (days 0, 14). Consider higher dose if incomplete depletion.</p>
+<span class="action">→ Re-dose RTX 1g × 2</span>
+</div>
+<div class="rtx-step">
+<div class="rtx-step-num">3</div>
+<h6>Switch or combine mechanism</h6>
+<p>Add CNI (tacrolimus 0.05–0.1 mg/kg/d) OR switch to cyclophosphamide + alternate-month steroids (Ponticelli).</p>
+<span class="action">→ TAC + RTX or CYC protocol</span>
+</div>
+<div class="rtx-step">
+<div class="rtx-step-num">4</div>
+<h6>Third-line / rescue therapy</h6>
+<p>If high risk & refractory: obinutuzumab (anti-CD20), daratumumab (anti-CD38), belimumab + RTX, or ACTH gel. Consider clinical trial enrollment.</p>
+<span class="action">→ Obinutuzumab / anti-CD38 / trial</span>
+</div>
+</div>
+<div style="margin-top:20px;background:#fff5f5;border-radius:12px;padding:14px 18px;border:1px solid #f0c0c0;font-size:13px;color:#9b2c2c;line-height:1.7">
+<strong>⚠️ Important:</strong> Before declaring rituximab failure, exclude <em>secondary MN</em> (malignancy, infection, drug) and confirm adequate B-cell depletion. Rising anti-PLA2R with stable proteinuria may be early immunologic relapse — re-treat with RTX before proteinuria worsens.
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PONTICELLI GANTT                                             -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-title"><i class="fas fa-chart-gantt"></i> Modified Ponticelli · 6-month Gantt chart</div>
+<div class="gantt-wrap">
+<div style="text-align:center;font-size:14px;font-weight:700;color:#1a365d;margin-bottom:6px">Alternating glucocorticoid–cyclophosphamide protocol</div>
+<div style="text-align:center;font-size:12px;color:#56759b;margin-bottom:20px">Ponticelli (JASN 1998) · 65–75% remission at 12–24 months</div>
+<div style="min-width:820px">
+<div class="gantt-header"><div class="gantt-header-cell">Month 1</div><div class="gantt-header-cell">Month 2</div><div class="gantt-header-cell">Month 3</div><div class="gantt-header-cell">Month 4</div><div class="gantt-header-cell">Month 5</div><div class="gantt-header-cell">Month 6</div></div>
+<div class="gantt-row"><div class="gantt-row-label">Days 1–3</div><div class="gantt-row-track"><div class="gantt-cell active-pre">MP 1g IV ×3d</div><div class="gantt-cell inactive">—</div><div class="gantt-cell active-pre">MP 1g IV ×3d</div><div class="gantt-cell inactive">—</div><div class="gantt-cell active-pre">MP 1g IV ×3d</div><div class="gantt-cell inactive">—</div></div></div>
+<div class="gantt-row"><div class="gantt-row-label">Days 4–30</div><div class="gantt-row-track"><div class="gantt-cell active-mp">Pred 0.5 mg/kg/d</div><div class="gantt-cell inactive">—</div><div class="gantt-cell active-mp">Pred 0.5 mg/kg/d</div><div class="gantt-cell inactive">—</div><div class="gantt-cell active-mp">Pred 0.5 mg/kg/d</div><div class="gantt-cell inactive">—</div></div></div>
+<div class="gantt-row"><div class="gantt-row-label">Full month</div><div class="gantt-row-track"><div class="gantt-cell inactive">—</div><div class="gantt-cell active-cyc">CYC 2.0–2.5 mg/kg/d</div><div class="gantt-cell inactive">—</div><div class="gantt-cell active-cyc">CYC 2.0–2.5 mg/kg/d</div><div class="gantt-cell inactive">—</div><div class="gantt-cell active-cyc">CYC 2.0–2.5 mg/kg/d</div></div></div>
+<div class="gantt-row"><div class="gantt-row-label">Monitoring</div><div class="gantt-row-track"><div class="gantt-cell" style="background:#eef4fa;color:#1a4c8c;font-size:9px">CBC, glucose, BP weekly</div><div class="gantt-cell" style="background:#eef4fa;color:#1a4c8c;font-size:9px">CBC q2w, UA, LFTs</div><div class="gantt-cell" style="background:#eef4fa;color:#1a4c8c;font-size:9px">CBC, glucose, BP weekly</div><div class="gantt-cell" style="background:#eef4fa;color:#1a4c8c;font-size:9px">CBC q2w, UA, LFTs</div><div class="gantt-cell" style="background:#eef4fa;color:#1a4c8c;font-size:9px">CBC, glucose, BP weekly</div><div class="gantt-cell" style="background:#eef4fa;color:#1a4c8c;font-size:9px">CBC q2w, UA, LFTs</div></div></div>
+</div>
+<div class="gantt-legend">
+<span><span class="gantt-dot pre"></span> Methylprednisolone IV pulse</span>
+<span><span class="gantt-dot mp"></span> Prednisone 0.5 mg/kg/d × 27d</span>
+<span><span class="gantt-dot cyc"></span> Cyclophosphamide 2.0–2.5 mg/kg/d</span>
+</div>
+<div style="font-size:11px;color:#56759b;margin-top:14px;text-align:center;font-style:italic">Cumulative CYC dose must remain &lt; 36 g lifetime. Hydration 2–3 L/d during CYC months. PCP prophylaxis (TMP-SMX), PPI, calcium + vitamin D.</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- DOSE CALCULATOR                                              -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-title"><i class="fas fa-calculator"></i> Patient-specific dose calculator</div>
+<div class="calc-wrap">
+<div class="calc-title"><i class="fas fa-prescription"></i> Auto-calculated immunosuppression doses</div>
+<div style="font-size:12px;color:#2f855a;margin-bottom:18px">Based on weight, age, sex, eGFR, and BSA — with renal and age adjustments</div>
+<div class="calc-grid">
+<div class="calc-input"><label>Weight (kg)</label><input type="number" id="calcWeight" value="70" min="20" max="200" step="1"></div>
+<div class="calc-input"><label>Age (years)</label><input type="number" id="calcAge" value="45" min="1" max="100" step="1"></div>
+<div class="calc-input"><label>Sex</label><select id="calcSex"><option value="male">Male</option><option value="female">Female</option></select></div>
+<div class="calc-input"><label>BSA (m²)</label><input type="number" id="calcBsa" value="1.85" min="0.5" max="3" step="0.01"></div>
+<div class="calc-input"><label>eGFR (mL/min/1.73m²)</label><input type="number" id="calcEgfr" value="72" min="5" max="200" step="1"></div>
+<div class="calc-input"><label>Serum albumin (g/L)</label><input type="number" id="calcAlb" value="36" min="10" max="60" step="0.5"></div>
+</div>
+<div class="calc-result">
+<h5><i class="fas fa-syringe" style="color:#d97747"></i> Modified Ponticelli — patient-specific doses</h5>
+<div class="calc-row"><span class="label">Methylprednisolone IV pulse (days 1–3, months 1,3,5)</span><span class="value" id="outMP">1000 mg IV × 3 days</span></div>
+<div class="calc-row"><span class="label">Prednisone PO (days 4–30, months 1,3,5)</span><span class="value" id="outPred">35 mg/d × 27 days</span></div>
+<div class="calc-row"><span class="label">Cyclophosphamide PO (months 2,4,6)</span><span class="value" id="outCYC">150 mg/d</span></div>
+<div class="calc-row"><span class="label">Cumulative CYC dose over 6 months</span><span class="value" id="outCYCTotal">13.6 g</span></div>
+<div class="calc-row"><span class="label">Lifetime CYC cap</span><span class="value">36 g (do not exceed)</span></div>
+</div>
+<div id="calcWarnings"></div>
+<div class="calc-info"><i class="fas fa-info-circle"></i> <strong>Mosteller BSA formula:</strong> √(height × weight / 3600). Doses assume normal hepatic function. Verify with clinical pharmacist. Adjustments: <strong>eGFR &lt;30</strong> → reduce CYC 25–50%; <strong>age &gt;65</strong> → cap CYC 1.5 mg/kg/d; <strong>albumin &lt;25</strong> → monitor free drug levels; <strong>female + reproductive age</strong> → fertility preservation counseling.</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PREDNISONE WARNING                                           -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-title"><i class="fas fa-capsules"></i> Prednisone in MN · Evidence summary</div>
+<div class="warning-box">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-exclamation-triangle" style="font-size:20px"></i><strong style="font-size:16px">❌ Prednisone monotherapy is NOT recommended</strong></div>
+<p style="font-size:14px;color:#5a3e3e;margin-left:30px">Cochrane 2014 + KDIGO 2021/2025: corticosteroids alone do NOT increase remission rates.</p>
+</div>
+<div class="info-box">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check-circle" style="font-size:20px"></i><strong style="font-size:16px">✅ Where prednisone IS used (combination only)</strong></div>
+<table class="kdigo-table" style="margin-top:8px">
+<thead><tr><th>Scenario</th><th>Prednisone role</th><th>Evidence</th></tr></thead>
+<tbody>
+<tr><td><strong>Modified Ponticelli</strong></td><td>0.5 mg/kg/d × 27d in months 1,3,5</td><td>65–75% remission</td></tr>
+<tr><td><strong>Rituximab pre-med</strong></td><td>Methylprednisolone 100mg IV single dose</td><td>Prevents infusion reactions</td></tr>
+<tr><td><strong>Severe nephrosis</strong></td><td>0.5–1 mg/kg/d, rapid taper 4–8 wks (controversial)</td><td>Expert opinion</td></tr>
+<tr><td><strong>Crescentic GN</strong></td><td>Pulse MP then prednisone 1 mg/kg/d</td><td>Standard of care</td></tr>
+<tr><td><strong>Superimposed MCD</strong></td><td>Prednisone 1 mg/kg/d, taper over 4–6 months</td><td>MCD guidelines</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- LIVE TREND CHART                                             -->
+<!-- ============================================================ -->
+<div class="chart-section">
+<div class="chart-card">
+<div class="card-title">
+<i class="fas fa-chart-line"></i> eGFR, Proteinuria & anti-PLA2R trend
+<button class="add-row-btn" id="addTrendBtn"><i class="fas fa-plus"></i> Add visit</button>
+<button class="btn-secondary" id="loadExampleBtn" style="margin-left:8px"><i class="fas fa-upload"></i> Load favorable example</button>
+<button class="btn-secondary" id="clearTrendsBtn" style="margin-left:8px"><i class="fas fa-trash-alt"></i> Clear</button>
+</div>
+<div style="max-height:180px;overflow-y:auto">
+<table class="trend-table" id="trendTable">
+<thead><tr><th>Date</th><th>eGFR</th><th>Proteinuria <span id="tableProtHeader">g/24h</span></th><th>anti-PLA2R (RU/mL)</th><th></th></tr></thead>
+<tbody id="trendBody"></tbody>
+</table>
+</div>
+<div class="dual-chart-wrapper">
+<div class="chart-canvas-container"><canvas id="dualAxisChart"></canvas></div>
+<div class="chart-legend-dual">
+<span><span class="legend-dot blue"></span> eGFR ↑ = better (left axis)</span>
+<span><span class="legend-dot orange"></span> Proteinuria ↓ = better (inner right)</span>
+<span><span class="legend-dot green"></span> anti-PLA2R ↓ = better (outer right)</span>
+<span style="color:#7a9ab0;font-size:12px">📅 X-axis auto-scales to 3–4 years</span>
+</div>
+</div>
+</div>
+</div>
+
+<div class="footer-note">
+<i class="fas fa-database"></i> Based on KDIGO 2021/2025, Zand/Fervenza/Sethi AJKD 2025, Sethi/Fervenza Nat Rev Nephrol 2025, NEJM 2026 obinutuzumab editorial. Prednisone monotherapy is NOT recommended. Antigen-based classification replaces primary vs. secondary dichotomy.
+</div>
+</div>
+
+<script>
+(function(){
+let trendData=[];
+const egfrInput=document.getElementById('egfr');
+const protInput=document.getElementById('proteinuria');
+const pla2rInput=document.getElementById('pla2r');
+const albuminInput=document.getElementById('albumin');
+const biopsySelect=document.getElementById('biopsy');
+const antigenSelect=document.getElementById('antigen');
+const unitButtons=document.querySelectorAll('#unitToggle button');
+const egfrUnitLabel=document.getElementById('egfrUnitLabel');
+const protUnitLabel=document.getElementById('protUnitLabel');
+const albUnitLabel=document.getElementById('albUnitLabel');
+const tableProtHeader=document.getElementById('tableProtHeader');
+const trendBody=document.getElementById('trendBody');
+const canvas=document.getElementById('dualAxisChart');
+const ctx=canvas?canvas.getContext('2d'):null;
+const trendEgfrBadge=document.getElementById('trendEgfrBadge');
+const trendProtBadge=document.getElementById('trendProtBadge');
+const trendPla2rBadge=document.getElementById('trendPla2rBadge');
+const trendMessage=document.getElementById('trendMessage');
+const riskLevelEl=document.getElementById('riskLevel');
+const riskDetailEl=document.getElementById('riskDetail');
+const recList=document.getElementById('recList');
+const immunoInd=document.getElementById('immunosuppressionIndication');
+const remissionEl=document.getElementById('remissionStatus');
+const biopsyText=document.getElementById('biopsyText');
+const calcWeight=document.getElementById('calcWeight');
+const calcAge=document.getElementById('calcAge');
+const calcSex=document.getElementById('calcSex');
+const calcBsa=document.getElementById('calcBsa');
+const calcEgfr=document.getElementById('calcEgfr');
+const calcAlb=document.getElementById('calcAlb');
+const outMP=document.getElementById('outMP');
+const outPred=document.getElementById('outPred');
+const outCYC=document.getElementById('outCYC');
+const outCYCTotal=document.getElementById('outCYCTotal');
+const calcWarnings=document.getElementById('calcWarnings');
+
+function getCurrentUnit(){const a=document.querySelector('#unitToggle .active');return a?a.dataset.unit:'si'}
+function updateUnitLabels(){const u=getCurrentUnit();egfrUnitLabel.textContent='mL/min/1.73m²';if(u==='si'){protUnitLabel.textContent='g/24h';albUnitLabel.textContent='g/L';tableProtHeader.textContent='Prot (g/24h)'}else{protUnitLabel.textContent='UPCR (g/g)';albUnitLabel.textContent='g/dL';tableProtHeader.textContent='UPCR (g/g)'}}
+function displayProteinuria(v){return getCurrentUnit()==='us'?v.toFixed(2):v.toFixed(1)}
+function internalProteinuria(v){return parseFloat(v)}
+
+function updateCalculator(){
+const wt=parseFloat(calcWeight.value)||70;const age=parseFloat(calcAge.value)||45;const sex=calcSex.value;const egfr=parseFloat(calcEgfr.value)||72;const alb=parseFloat(calcAlb.value)||36;
+let mpDose=1000;let mpNote='';if(age>70||wt<50){mpDose=500;mpNote=' — reduced'}outMP.textContent=mpDose+' mg IV × 3 days'+mpNote;
+let predDose=0.5*wt;if(predDose>60)predDose=60;predDose=Math.round(predDose);let predNote='';if(0.5*wt>60){predNote=' — capped 60 mg/d'}outPred.textContent=predDose+' mg/d × 27 days'+predNote;
+let cycPerKg=2.0;let cycAdjust='';if(age>65){cycPerKg=1.5;cycAdjust+=' — age >65'}if(egfr<30){cycPerKg*=0.5;cycAdjust+=' — eGFR <30'}else if(egfr<45){cycPerKg*=0.75;cycAdjust+=' — eGFR 30–45'}
+let cycDose=cycPerKg*wt;if(cycDose>200)cycDose=200;cycDose=Math.round(cycDose);outCYC.textContent=cycDose+' mg/d'+cycAdjust;
+let total=cycDose*90/1000;outCYCTotal.textContent=total.toFixed(1)+' g';
+let warnings='';
+if(egfr<30)warnings+='<div class="calc-warn"><i class="fas fa-exclamation-triangle"></i> <strong>eGFR <30:</strong> CYC 50% reduction. Consider RTX or CNI instead.</div>';
+if(age>65)warnings+='<div class="calc-warn"><i class="fas fa-exclamation-triangle"></i> <strong>Age >65:</strong> CYC capped 1.5 mg/kg/d. Consider RTX first-line.</div>';
+if(sex==='female'&&age>=18&&age<=45)warnings+='<div class="calc-warn"><i class="fas fa-venus"></i> <strong>Reproductive age:</strong> CYC gonadotoxic. Fertility preservation.</div>';
+if(alb<25)warnings+='<div class="calc-warn"><i class="fas fa-flask"></i> <strong>Albumin <25:</strong> Monitor free drug. Consider anticoagulation.</div>';
+if(total>36)warnings+='<div class="calc-warn"><i class="fas fa-exclamation-triangle"></i> <strong>CYC >36 g:</strong> Lifetime cap exceeded.</div>';
+if(warnings==='')warnings='<div class="calc-ok"><i class="fas fa-check-circle"></i> No dose adjustments required.</div>';
+calcWarnings.innerHTML=warnings;
+}
+[calcWeight,calcAge,calcSex,calcBsa,calcEgfr,calcAlb].forEach(el=>{el.addEventListener('input',updateCalculator);el.addEventListener('change',updateCalculator)});
+
+function renderTrendTable(){
+if(!trendBody)return;
+if(trendData.length===0){trendBody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#7a9ab0;padding:18px"><i class="fas fa-plus-circle"></i> Click "Add visit"</td></tr>';drawDualAxisChart();updateTrendSummary();updateRiskAndRecs();return}
+const sorted=[...trendData].sort((a,b)=>new Date(b.date)-new Date(a.date));let html='';
+sorted.forEach(row=>{const ri=trendData.indexOf(row);const pv=row.pla2r!==undefined?row.pla2r:'';html+='<tr><td><input type="date" value="'+row.date+'" data-idx="'+ri+'" data-field="date" class="trend-input" style="border:none;background:transparent;font-size:14px;width:100%;padding:4px"></td><td><input type="number" value="'+row.egfr+'" data-idx="'+ri+'" data-field="egfr" class="trend-input" style="border:none;background:transparent;font-size:14px;width:70px;padding:4px" step="1"></td><td><input type="number" value="'+displayProteinuria(row.prot)+'" data-idx="'+ri+'" data-field="prot" class="trend-input" style="border:none;background:transparent;font-size:14px;width:70px;padding:4px" step="0.1"></td><td><input type="number" value="'+pv+'" data-idx="'+ri+'" data-field="pla2r" class="trend-input" style="border:none;background:transparent;font-size:14px;width:80px;padding:4px" step="1" min="0" max="500"></td><td><button class="delete-row-btn" data-idx="'+ri+'"><i class="fas fa-times"></i></button></td></tr>'});
+trendBody.innerHTML=html;
+document.querySelectorAll('.trend-input').forEach(inp=>{inp.addEventListener('change',function(){const idx=parseInt(this.dataset.idx);const f=this.dataset.field;let v=this.value;if(f==='egfr')v=parseFloat(v)||0;else if(f==='prot')v=internalProteinuria(parseFloat(v)||0);else if(f==='pla2r')v=v===''?undefined:(parseFloat(v)||0);if(idx>=0&&idx<trendData.length){trendData[idx][f]=v;renderTrendTable();fullUpdate()}})});
+document.querySelectorAll('.delete-row-btn').forEach(btn=>{btn.addEventListener('click',function(){const idx=parseInt(this.dataset.idx);if(idx>=0&&idx<trendData.length){trendData.splice(idx,1);renderTrendTable();fullUpdate()}})});
+drawDualAxisChart();updateTrendSummary();updateRiskAndRecs();
+}
+function addTrendRow(){const today=new Date().toISOString().split('T')[0];const last=trendData.length>0?trendData[trendData.length-1]:null;trendData.push({date:today,egfr:last?last.egfr:60,prot:last?last.prot:3.0,pla2r:last&&last.pla2r!==undefined?last.pla2r:(last?50:undefined)});renderTrendTable()}
+function clearTrends(){if(trendData.length===0)return;if(confirm('Clear all historical data?')){trendData=[];renderTrendTable();fullUpdate()}}
+function loadExampleData(){
+trendData=[{date:'2023-06-15',egfr:48,prot:6.8,pla2r:82},{date:'2023-12-01',egfr:52,prot:5.9,pla2r:71},{date:'2024-06-20',egfr:56,prot:4.8,pla2r:58},{date:'2024-12-10',egfr:60,prot:3.5,pla2r:45},{date:'2025-06-05',egfr:64,prot:2.9,pla2r:31},{date:'2025-11-15',egfr:68,prot:2.1,pla2r:24},{date:'2026-03-05',egfr:72,prot:1.8,pla2r:18}];
+const latest=trendData[trendData.length-1];if(latest){egfrInput.value=latest.egfr;protInput.value=displayProteinuria(latest.prot);if(latest.pla2r!==undefined)pla2rInput.value=latest.pla2r}
+renderTrendTable();fullUpdate();
+}
+
+function drawDualAxisChart(){
+if(!ctx||!canvas)return;
+const container=canvas.parentElement;canvas.width=container.clientWidth;canvas.height=520;
+const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);
+if(trendData.length===0){ctx.fillStyle='#7a9ab0';ctx.font='16px system-ui';ctx.textAlign='center';ctx.fillText('Add visits to plot chart',w/2,h/2);return}
+const sorted=[...trendData].sort((a,b)=>new Date(a.date)-new Date(b.date));
+const firstDate=new Date(sorted[0].date),lastDate=new Date(sorted[sorted.length-1].date);
+const dateRangeMs=lastDate-firstDate;let vsd=new Date(firstDate),ved=new Date(lastDate);
+if(dateRangeMs<365*24*60*60*1000){vsd.setFullYear(vsd.getFullYear()-1);ved.setFullYear(ved.getFullYear()+2)}else if(dateRangeMs<3*365*24*60*60*1000){vsd.setMonth(vsd.getMonth()-3);ved.setMonth(ved.getMonth()+6)}
+const totalViewMs=ved-vsd;
+const padding={left:78,right:165,top:34,bottom:68};
+const chartW=w-padding.left-padding.right,chartH=h-padding.top-padding.bottom;
+const egfrMin=Math.max(0,Math.min(...sorted.map(d=>d.egfr))-15);
+const egfrMax=Math.max(...sorted.map(d=>d.egfr),10)+15;
+const protMax=Math.max(...sorted.map(d=>d.prot),0.5)*1.3;
+const pla2rVals=sorted.filter(d=>d.pla2r!==undefined&&d.pla2r!==null&&d.pla2r!=='').map(d=>d.pla2r);
+const pla2rMax=pla2rVals.length>0?Math.max(...pla2rVals,50)*1.3:200;
+const leftAxisX=padding.left,innerAxisX=w-padding.right,outerAxisX=w-padding.right+82;
+function dateToX(d){return padding.left+((new Date(d)-vsd)/totalViewMs)*chartW}
+ctx.strokeStyle='#eef2f8';ctx.lineWidth=1;for(let i=0;i<=5;i++){const y=h-padding.bottom-(i/5)*chartH;ctx.beginPath();ctx.moveTo(padding.left,y);ctx.lineTo(innerAxisX,y);ctx.stroke()}
+ctx.fillStyle='#2a7de1';ctx.font='bold 13px system-ui';ctx.textAlign='right';for(let i=0;i<=5;i++){const v=egfrMin+(i/5)*(egfrMax-egfrMin);const y=h-padding.bottom-(i/5)*chartH;ctx.fillText(Math.round(v),leftAxisX-10,y+5)}
+ctx.strokeStyle='#d97747';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(innerAxisX,padding.top);ctx.lineTo(innerAxisX,h-padding.bottom);ctx.stroke();
+ctx.fillStyle='#d97747';ctx.font='bold 13px system-ui';ctx.textAlign='left';for(let i=0;i<=5;i++){const v=(i/5)*protMax;const y=h-padding.bottom-(i/5)*chartH;ctx.beginPath();ctx.strokeStyle='#d97747';ctx.lineWidth=1.5;ctx.moveTo(innerAxisX,y);ctx.lineTo(innerAxisX+8,y);ctx.stroke();ctx.fillText(v.toFixed(1),innerAxisX+12,y+5)}
+ctx.strokeStyle='#2e7d32';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(outerAxisX,padding.top);ctx.lineTo(outerAxisX,h-padding.bottom);ctx.stroke();
+ctx.fillStyle='#2e7d32';ctx.font='bold 13px system-ui';ctx.textAlign='left';for(let i=0;i<=5;i++){const v=(i/5)*pla2rMax;const y=h-padding.bottom-(i/5)*chartH;ctx.beginPath();ctx.strokeStyle='#2e7d32';ctx.lineWidth=1.5;ctx.moveTo(outerAxisX,y);ctx.lineTo(outerAxisX+8,y);ctx.stroke();ctx.fillText(Math.round(v),outerAxisX+12,y+5)}
+ctx.strokeStyle='#b0c4d8';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(padding.left,padding.top);ctx.lineTo(padding.left,h-padding.bottom);ctx.lineTo(innerAxisX,h-padding.bottom);ctx.stroke();
+ctx.fillStyle='#3f5a78';ctx.font='12px system-ui';ctx.textAlign='center';const ms=totalViewMs>3*365*24*60*60*1000?6:3;let cd=new Date(vsd);cd.setDate(1);while(cd<=ved){const x=dateToX(cd);if(x>=padding.left&&x<=innerAxisX){ctx.fillText(cd.toLocaleDateString('en-US',{month:'short',year:'2-digit'}),x,h-padding.bottom+22);ctx.beginPath();ctx.strokeStyle='#d0d8e4';ctx.lineWidth=1;ctx.moveTo(x,h-padding.bottom);ctx.lineTo(x,h-padding.bottom+6);ctx.stroke()}cd.setMonth(cd.getMonth()+ms)}
+ctx.beginPath();ctx.strokeStyle='#2a7de1';ctx.lineWidth=4;sorted.forEach((d,i)=>{const x=dateToX(d.date);const y=h-padding.bottom-((d.egfr-egfrMin)/(egfrMax-egfrMin))*chartH;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)});ctx.stroke();
+sorted.forEach(d=>{const x=dateToX(d.date);const y=h-padding.bottom-((d.egfr-egfrMin)/(egfrMax-egfrMin))*chartH;ctx.beginPath();ctx.fillStyle='#2a7de1';ctx.arc(x,y,7,0,Math.PI*2);ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=3;ctx.stroke();ctx.fillStyle='#1f3a5f';ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.fillText(d.egfr,x,y-16)});
+ctx.beginPath();ctx.strokeStyle='#d97747';ctx.lineWidth=4;ctx.setLineDash([8,4]);sorted.forEach((d,i)=>{const x=dateToX(d.date);const y=h-padding.bottom-(d.prot/protMax)*chartH;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)});ctx.stroke();ctx.setLineDash([]);
+sorted.forEach(d=>{const x=dateToX(d.date);const y=h-padding.bottom-(d.prot/protMax)*chartH;ctx.beginPath();ctx.fillStyle='#d97747';ctx.arc(x,y,7,0,Math.PI*2);ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=3;ctx.stroke();ctx.fillStyle='#b34033';ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.fillText(d.prot.toFixed(1),x,y-16)});
+const pp=sorted.filter(d=>d.pla2r!==undefined&&d.pla2r!==null&&d.pla2r!=='');
+if(pp.length>=2){ctx.beginPath();ctx.strokeStyle='#2e7d32';ctx.lineWidth=3.5;ctx.setLineDash([4,4]);pp.forEach((d,i)=>{const x=dateToX(d.date);const y=h-padding.bottom-(d.pla2r/pla2rMax)*chartH;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)});ctx.stroke();ctx.setLineDash([]);pp.forEach(d=>{const x=dateToX(d.date);const y=h-padding.bottom-(d.pla2r/pla2rMax)*chartH;ctx.beginPath();ctx.fillStyle='#2e7d32';ctx.arc(x,y,6,0,Math.PI*2);ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=2.5;ctx.stroke();ctx.fillStyle='#1b5e20';ctx.font='bold 10px system-ui';ctx.textAlign='center';ctx.fillText(d.pla2r,x,y-14)})}
+ctx.fillStyle='#2a7de1';ctx.font='bold 14px system-ui';ctx.textAlign='center';ctx.save();ctx.translate(22,h/2);ctx.rotate(-Math.PI/2);ctx.fillText('eGFR (mL/min/1.73m²)',0,0);ctx.restore();
+ctx.fillStyle='#d97747';ctx.save();ctx.translate(innerAxisX+58,h/2);ctx.rotate(Math.PI/2);ctx.fillText('Proteinuria (g/24h)',0,0);ctx.restore();
+ctx.fillStyle='#2e7d32';ctx.save();ctx.translate(outerAxisX+58,h/2);ctx.rotate(Math.PI/2);ctx.fillText('anti-PLA2R (RU/mL)',0,0);ctx.restore();
+}
+
+function updateTrendSummary(){
+if(trendData.length<2){trendEgfrBadge.className='trend-badge trend-stable';trendEgfrBadge.innerHTML='<i class="fas fa-minus"></i> eGFR stable';trendProtBadge.className='trend-badge trend-stable';trendProtBadge.innerHTML='<i class="fas fa-minus"></i> proteinuria stable';trendPla2rBadge.className='trend-badge trend-stable';trendPla2rBadge.innerHTML='<i class="fas fa-minus"></i> PLA2R stable';trendMessage.textContent='Add at least 2 visits.';return}
+const sorted=[...trendData].sort((a,b)=>new Date(a.date)-new Date(b.date));
+const first=sorted[0],last=sorted[sorted.length-1];
+const egfrChange=((last.egfr-first.egfr)/first.egfr)*100;
+const protChange=((last.prot-first.prot)/first.prot)*100;
+if(egfrChange>5){trendEgfrBadge.className='trend-badge trend-good';trendEgfrBadge.innerHTML='<i class="fas fa-arrow-up"></i> eGFR improving (+'+egfrChange.toFixed(1)+'%)'}else if(egfrChange<-5){trendEgfrBadge.className='trend-badge trend-warn';trendEgfrBadge.innerHTML='<i class="fas fa-arrow-down"></i> eGFR declining ('+egfrChange.toFixed(1)+'%)'}else{trendEgfrBadge.className='trend-badge trend-stable';trendEgfrBadge.innerHTML='<i class="fas fa-minus"></i> eGFR stable ('+egfrChange.toFixed(1)+'%)'}
+if(protChange<-10){trendProtBadge.className='trend-badge trend-good';trendProtBadge.innerHTML='<i class="fas fa-arrow-down"></i> proteinuria falling ('+protChange.toFixed(1)+'%)'}else if(protChange>10){trendProtBadge.className='trend-badge trend-warn';trendProtBadge.innerHTML='<i class="fas fa-arrow-up"></i> proteinuria rising (+'+protChange.toFixed(1)+'%)'}else{trendProtBadge.className='trend-badge trend-stable';trendProtBadge.innerHTML='<i class="fas fa-minus"></i> proteinuria stable ('+protChange.toFixed(1)+'%)'}
+const pv=sorted.filter(d=>d.pla2r!==undefined&&d.pla2r!==null&&d.pla2r!=='');
+if(pv.length>=2){const f=pv[0].pla2r,l=pv[pv.length-1].pla2r;const pChange=((l-f)/f)*100;if(pChange<-10){trendPla2rBadge.className='trend-badge trend-good';trendPla2rBadge.innerHTML='<i class="fas fa-arrow-down"></i> PLA2R falling ('+pChange.toFixed(1)+'%)'}else if(pChange>10){trendPla2rBadge.className='trend-badge trend-warn';trendPla2rBadge.innerHTML='<i class="fas fa-arrow-up"></i> PLA2R rising (+'+pChange.toFixed(1)+'%)'}else{trendPla2rBadge.className='trend-badge trend-stable';trendPla2rBadge.innerHTML='<i class="fas fa-minus"></i> PLA2R stable ('+pChange.toFixed(1)+'%)'}}else{trendPla2rBadge.className='trend-badge trend-stable';trendPla2rBadge.innerHTML='<i class="fas fa-minus"></i> PLA2R stable'}
+const months=Math.round((new Date(last.date)-new Date(first.date))/(1000*60*60*24*30));
+const protRising=protChange>10,protFalling=protChange<-10,egfrDeclining=egfrChange<-5,egfrImproving=egfrChange>5;
+let pRising=false,pFalling=false;if(pv.length>=2){const pc=((pv[pv.length-1].pla2r-pv[0].pla2r)/pv[0].pla2r)*100;pRising=pc>10;pFalling=pc<-10}
+let msg;
+if((egfrDeclining&&protRising)||(protRising&&pRising)||(egfrDeclining&&pRising)){msg='⚠️ Over '+months+' months: HIGH-RISK pattern. Escalate immunosuppression.'}
+else if(protRising||pRising||egfrDeclining){const parts=[];if(egfrDeclining)parts.push('eGFR declining');if(protRising)parts.push('proteinuria rising');if(pRising)parts.push('PLA2R rising');msg='Over '+months+' months: '+parts.join('; ')+' → adverse trend.'}
+else if(protFalling||pFalling||egfrImproving){const parts=[];if(egfrImproving)parts.push('eGFR improving');if(protFalling)parts.push('proteinuria falling');if(pFalling)parts.push('PLA2R falling');msg='✓ Over '+months+' months: '+parts.join('; ')+' → favorable trajectory.'}
+else{msg='Trends stable over '+months+' months.'}
+trendMessage.textContent=msg;
+}
+
+function updateRiskAndRecs(){
+const egfr=parseFloat(egfrInput.value)||60;
+const proteinuria=internalProteinuria(parseFloat(protInput.value)||2.0);
+const pla2r=parseFloat(pla2rInput.value)||0;
+const albumin=parseFloat(albuminInput.value)||30;
+const biopsyVal=biopsySelect.value;
+const antigenVal=antigenSelect.value;
+let egfrTrend='stable',protTrend='stable',pla2rTrend='stable';
+if(trendData.length>=2){const sorted=[...trendData].sort((a,b)=>new Date(a.date)-new Date(b.date));const first=sorted[0],last=sorted[sorted.length-1];const egfrC=((last.egfr-first.egfr)/first.egfr)*100;const protC=((last.prot-first.prot)/first.prot)*100;const pv=sorted.filter(d=>d.pla2r!==undefined&&d.pla2r!==null&&d.pla2r!=='');let pC=0;if(pv.length>=2)pC=((pv[pv.length-1].pla2r-pv[0].pla2r)/pv[0].pla2r)*100;if(egfrC<-5)egfrTrend='declining';else if(egfrC>5)egfrTrend='improving';if(protC>10)protTrend='increasing';else if(protC<-10)protTrend='decreasing';if(pC>10)pla2rTrend='rising';else if(pC<-10)pla2rTrend='falling'}
+let risk='low',riskText='LOW',detail='eGFR '+egfr+', proteinuria '+proteinuria.toFixed(1)+', PLA2R '+pla2r;
+const severeAbs=egfr<30||proteinuria>8;const adverseTrend=egfrTrend==='declining'||protTrend==='increasing'||pla2rTrend==='rising';
+const severityMarker=proteinuria>3.5||pla2r>50||albumin<30||egfr<60;
+if(severeAbs||(adverseTrend&&severityMarker)){risk='high';riskText='HIGH';const parts=[];if(egfrTrend==='declining')parts.push('eGFR declining');if(protTrend==='increasing')parts.push('proteinuria rising');if(pla2rTrend==='rising')parts.push('PLA2R rising');detail='eGFR '+egfr+', proteinuria '+proteinuria.toFixed(1)+', PLA2R '+pla2r+(parts.length?' — '+parts.join(', '):'')}
+else if(proteinuria>=3.5&&(albumin<30||egfr<60||pla2r>50)){risk='moderate';riskText='MODERATE–HIGH';detail='proteinuria '+proteinuria.toFixed(1)+', PLA2R '+pla2r}
+else if(proteinuria>=1.5&&(pla2r>20||protTrend==='increasing')){risk='moderate';riskText='MODERATE';detail='proteinuria '+proteinuria.toFixed(1)+', PLA2R '+pla2r}
+riskLevelEl.className='risk-value '+(risk==='high'?'high':risk==='moderate'?'moderate':'low');
+riskLevelEl.textContent=riskText;riskDetailEl.textContent=detail;
+remissionEl.innerHTML=proteinuria<0.3?'<i class="fas fa-check-circle" style="color:#1f8b4c"></i> Complete remission':(proteinuria<3.5&&protTrend==='decreasing'?'<i class="fas fa-circle-half-stroke" style="color:#d9a021"></i> Partial remission':'<i class="far fa-circle"></i> No remission');
+const immuno=(risk==='high'||risk==='moderate'||(proteinuria>=3.5&&(albumin<30||egfr<60||pla2r>50)));
+immunoInd.innerHTML=immuno?'<i class="fas fa-syringe"></i> Immunosuppression indicated':'<i class="fas fa-shield-alt"></i> Supportive care only';
+immunoInd.style.background=immuno?'#d4edda':'#eef2f6';immunoInd.style.color=immuno?'#0e5e32':'#3f5a78';
+const biopsyMap={'pla2r-positive':'PLA2R-positive with subepithelial deposits','pla2r-negative':'PLA2R-negative, biopsy-proven MN','not-done':'Not done / pending','other-antigen':'Other antigen (THSD7A, NELL1, etc)'};
+biopsyText.textContent=biopsyMap[biopsyVal]||'Not done';
+let recs=['Initiate RAS blockade (ACEi/ARB) target BP <130/80','Diuretics for edema, sodium restriction ≤2 g/d'];
+const antigenRecs={'pla2r':['<strong>PLA2R-associated MN</strong> — rituximab 1g IV day 0 + day 14 if moderate/high risk','Monitor anti-PLA2R at 3, 6, 12 months'],'thsd7a':['<strong>THSD7A</strong> — MANDATORY malignancy screening','Treat cancer if found'],'nell1':['<strong>NELL1</strong> — screen malignancy AND drugs','Discontinue offending agent'],'ext12':['<strong>EXT1/2</strong> — autoimmune workup','Consider lupus nephritis'],'ndnf':['<strong>NDNF</strong> — syphilis. Order RPR/VDRL','Antibiotics'],'ncam1':['<strong>NCAM1</strong> — lupus serologies','Treat lupus'],'fat1':['<strong>FAT1</strong> — post-HSCT','GVHD care'],'pcdh7':['<strong>PCDH7</strong> — often mild','May not require IST'],'sema3b':['<strong>SEMA3B</strong> — pediatric-enriched','Standard IST if high risk'],'negative':['<strong>All antigens negative</strong> — secondary MN workup','Screen: ANA, C3/C4, HBV/HCV, RPR, SPEP, cancer'],'unknown':['<strong>Antigen not tested</strong> — order serum anti-PLA2R ELISA']};
+if(antigenRecs[antigenVal])recs=recs.concat(antigenRecs[antigenVal]);
+if(immuno){recs.push('Rituximab 1g IV day 0 + day 14 — 1st line for PLA2R-associated');if(pla2rTrend==='rising'||(pla2r>50&&protTrend==='increasing'))recs.push('Rising PLA2R → re-dose rituximab or switch to CNI / Ponticelli');if(albumin<25)recs.push('Anticoagulation — see box above (albumin <25 g/L)')}
+else{recs.push('Continue supportive care, reassess in 3–6 months')}
+recs.push('SGLT2i for renoprotection');
+recList.innerHTML=recs.map(r=>'<li><i class="fas fa-check-circle"></i> '+r+'</li>').join('');
+}
+
+function fullUpdate(){updateTrendSummary();updateRiskAndRecs();drawDualAxisChart();updateCalculator()}
+function bindEvents(){
+document.getElementById('refreshBtn').addEventListener('click',fullUpdate);
+document.getElementById('addTrendBtn').addEventListener('click',addTrendRow);
+document.getElementById('loadExampleBtn').addEventListener('click',loadExampleData);
+document.getElementById('clearTrendsBtn').addEventListener('click',clearTrends);
+[egfrInput,protInput,pla2rInput,albuminInput,biopsySelect,antigenSelect].forEach(el=>{el.addEventListener('input',fullUpdate);el.addEventListener('change',fullUpdate)});
+unitButtons.forEach(btn=>{btn.addEventListener('click',function(){unitButtons.forEach(b=>b.classList.remove('active'));this.classList.add('active');updateUnitLabels();renderTrendTable();fullUpdate()})});
+window.addEventListener('resize',()=>drawDualAxisChart());
+}
+window.addEventListener('DOMContentLoaded',()=>{updateUnitLabels();bindEvents();loadExampleData();updateCalculator()});
+})();
+</script>
+</body>
+</html>
